@@ -6,7 +6,7 @@ Four daily browser puzzle games with a cybersecurity theme, à la Wordle / Conne
 
 | Game | What it is |
 | --- | --- |
-| 🐞 **CVE-dle** | Guess the famous vulnerability in 6 tries; each miss reveals another clue (severity, vector, year, product, type, description) |
+| 🐞 **CVE-dle** | Guess the famous vulnerability in 6 tries; every guess scores its attributes against the answer (severity, vector, vendor, year, type) green/yellow/red, Gamedle-style, with up/down arrows on the year |
 | 🚨 **Triage** | Connections-style: group 16 alert artifacts into 4 hidden attack types, 4 mistakes allowed |
 | 🎣 **Phish or Legit** | Judge 5 rendered emails/URLs, then see the tells (lookalike domains, mismatched links, SPF fails…) |
 | 👾 **Malware or…?** | Four-way category call — malware, Pokémon, band, or something else — over a weighted deck; only exact calls score |
