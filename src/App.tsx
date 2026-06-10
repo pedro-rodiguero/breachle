@@ -1,6 +1,7 @@
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { Layout } from './components/Layout'
 import { CveDle } from './games/CveDle'
+import { PhishOrLegit } from './games/PhishOrLegit'
 import { Triage } from './games/Triage'
 import { Hub } from './pages/Hub'
 
@@ -16,6 +17,7 @@ export default function App() {
           <Route index element={<Hub />} />
           <Route path="/cvedle" element={<CveDle />} />
           <Route path="/triage" element={<Triage />} />
+          <Route path="/phish" element={<PhishOrLegit />} />
         </Route>
       </Routes>
     </HashRouter>
