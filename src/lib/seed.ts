@@ -1,11 +1,9 @@
 import { EPOCH_UTC, type GameId } from './config'
 
-/**
- * Deterministic daily-puzzle selection. Everything derives from the current
- * UTC date so every player worldwide sees the same puzzle on the same day.
- */
+// Daily-puzzle selection. Everything is derived from the UTC date so the
+// puzzle is identical for everyone on a given day, no server needed.
 
-/** Small, fast seeded PRNG (32-bit state, good enough for puzzle shuffles). */
+// mulberry32 PRNG. Fine for shuffles, not for anything security-sensitive.
 export function mulberry32(seed: number): () => number {
   let a = seed >>> 0
   return () => {
@@ -17,7 +15,7 @@ export function mulberry32(seed: number): () => number {
   }
 }
 
-/** FNV-1a string hash → 32-bit unsigned int, used to seed the PRNG. */
+// FNV-1a hash, used to turn a string into a PRNG seed.
 export function hashString(input: string): number {
   let h = 0x811c9dc5
   for (let i = 0; i < input.length; i++) {
@@ -27,31 +25,31 @@ export function hashString(input: string): number {
   return h >>> 0
 }
 
-/** Today's date key in UTC, e.g. "2026-06-09". */
+// UTC date key, e.g. "2026-06-09".
 export function utcDateKey(date: Date = new Date()): string {
   return date.toISOString().slice(0, 10)
 }
 
 const DAY_MS = 86_400_000
 
-/** 1-based puzzle day number since EPOCH_UTC (clamped to ≥ 1). */
+// 1-based day number since EPOCH_UTC, clamped to at least 1.
 export function dayNumber(dateKey: string = utcDateKey()): number {
   const days = Math.round((Date.parse(dateKey) - Date.parse(EPOCH_UTC)) / DAY_MS)
   return Math.max(1, days + 1)
 }
 
-/** A fresh seeded PRNG for one game on one day. */
+// A PRNG seeded per game per day.
 export function dailyRng(gameId: GameId, dateKey: string = utcDateKey()): () => number {
   return mulberry32(hashString(`${gameId}:${dateKey}`))
 }
 
-/** Deterministically pick today's entry from a game's dataset. */
+// Pick one entry from a dataset for the day.
 export function dailyPick<T>(gameId: GameId, items: readonly T[], dateKey?: string): T {
   const rng = dailyRng(gameId, dateKey)
   return items[Math.floor(rng() * items.length)]
 }
 
-/** Fisher–Yates shuffle driven by a provided PRNG (does not mutate input). */
+// Fisher-Yates shuffle with a supplied PRNG. Returns a copy.
 export function shuffleWith<T>(rng: () => number, items: readonly T[]): T[] {
   const out = [...items]
   for (let i = out.length - 1; i > 0; i--) {
@@ -61,7 +59,7 @@ export function shuffleWith<T>(rng: () => number, items: readonly T[]): T[] {
   return out
 }
 
-/** Deterministically sample `n` distinct entries for today's puzzle. */
+// Sample n distinct entries for the day.
 export function dailySample<T>(
   gameId: GameId,
   items: readonly T[],
@@ -71,7 +69,7 @@ export function dailySample<T>(
   return shuffleWith(dailyRng(gameId, dateKey), items).slice(0, Math.min(n, items.length))
 }
 
-/** Milliseconds until the next UTC midnight (when the next puzzle drops). */
+// ms until the next UTC midnight, when the new puzzle drops.
 export function msUntilNextPuzzle(now: Date = new Date()): number {
   const next = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1)
   return next - now.getTime()

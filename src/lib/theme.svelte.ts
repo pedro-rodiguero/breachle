@@ -2,10 +2,8 @@ import { STORAGE_PREFIX } from './config'
 
 const THEME_KEY = `${STORAGE_PREFIX}.theme`
 
-/**
- * Dark-first theme store. app.html applies the initial `.light` class before
- * first paint; this rune-backed singleton lets components read and toggle it.
- */
+// Dark-first theme. app.html sets the initial `.light` class before first
+// paint; this singleton lets components read and toggle it.
 class Theme {
 	light = $state(false)
 

@@ -1,11 +1,9 @@
 import { STORAGE_PREFIX, type GameId } from './config'
 import { utcDateKey } from './seed'
 
-/**
- * localStorage persistence, one record per game. Stores lifetime stats plus
- * today's in-progress state and final result. Anything saved for a previous
- * day is ignored on load (the puzzle has rotated), while stats persist.
- */
+// One localStorage record per game: lifetime stats plus today's progress and
+// result. State saved for a past day is ignored on load (the puzzle rotated);
+// stats carry over.
 
 export type GameStats = {
   streak: number
@@ -18,9 +16,9 @@ export const EMPTY_STATS: GameStats = { streak: 0, maxStreak: 0, played: 0, wins
 
 type StoredGame<P, R> = {
   stats: GameStats
-  /** Date key of the last completed puzzle — drives streak continuation. */
+  // Last day completed; used to decide if the streak continues.
   lastCompletedDate?: string
-  /** Date key that `inProgress` / `result` belong to. */
+  // Day that inProgress/result belong to.
   date?: string
   inProgress?: P
   result?: R
@@ -38,7 +36,7 @@ function readGame<P, R>(gameId: GameId): StoredGame<P, R> {
       return { ...parsed, stats: { ...EMPTY_STATS, ...parsed.stats } }
     }
   } catch {
-    // Corrupt or unavailable storage → start fresh.
+    // Corrupt or missing storage: start fresh.
   }
   return { stats: { ...EMPTY_STATS } }
 }
@@ -47,7 +45,7 @@ function writeGame<P, R>(gameId: GameId, data: StoredGame<P, R>): void {
   try {
     localStorage.setItem(storageKey(gameId), JSON.stringify(data))
   } catch {
-    // Storage full/blocked — the game still works, it just won't persist.
+    // Storage full or blocked. Game still runs, just no persistence.
   }
 }
 
@@ -57,7 +55,7 @@ export type TodayState<P, R> = {
   result?: R
 }
 
-/** Load stats plus whatever was saved for `todayKey` (stale days dropped). */
+// Load stats plus anything saved for todayKey. Stale days are dropped.
 export function loadToday<P, R>(gameId: GameId, todayKey: string): TodayState<P, R> {
   const stored = readGame<P, R>(gameId)
   const isToday = stored.date === todayKey
@@ -82,10 +80,8 @@ function previousDayKey(dateKey: string): string {
   return utcDateKey(new Date(Date.parse(dateKey) - 86_400_000))
 }
 
-/**
- * Record today's final result and roll the stats forward. The streak grows
- * only if yesterday's puzzle was also completed; a skipped day resets to 1.
- */
+// Save the day's result and advance stats. Streak only grows if yesterday
+// was also completed; a skipped day resets it to 1.
 export function completeToday<R>(
   gameId: GameId,
   todayKey: string,
@@ -115,7 +111,7 @@ export function completeToday<R>(
 
 export type GameStatus = 'new' | 'playing' | 'done'
 
-/** Hub-card status for one game today. */
+// Hub-card status for a game today.
 export function getGameStatus(gameId: GameId, todayKey: string = utcDateKey()): GameStatus {
   const stored = readGame(gameId)
   if (stored.date !== todayKey) return 'new'
@@ -124,7 +120,7 @@ export function getGameStatus(gameId: GameId, todayKey: string = utcDateKey()): 
   return 'new'
 }
 
-/** Current streak for hub display (0 if the chain is already broken). */
+// Streak to show on the hub. 0 if the chain is already broken.
 export function getDisplayStreak(gameId: GameId, todayKey: string = utcDateKey()): number {
   const stored = readGame(gameId)
   const alive =
@@ -133,7 +129,7 @@ export function getDisplayStreak(gameId: GameId, todayKey: string = utcDateKey()
   return alive ? stored.stats.streak : 0
 }
 
-/** Lifetime stats for one game (stats page). */
+// Lifetime stats for a game.
 export function getStats(gameId: GameId): GameStats {
   return readGame(gameId).stats
 }

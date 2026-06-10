@@ -1,13 +1,10 @@
-/**
- * Global app configuration. The umbrella brand is a placeholder —
- * rename the whole site by changing APP_NAME (and SITE_URL when deployed).
- */
+// App-wide config. Rebrand by changing APP_NAME (and SITE_URL on deploy).
 export const APP_NAME = 'Breachle'
 
-/** Canonical URL carried by share texts. PLACEHOLDER — update at deploy. */
+// Canonical URL used in share text. TODO: set the real domain at deploy.
 export const SITE_URL = 'https://breachle.app'
 
-/** Day #1 of every puzzle. Earlier dates clamp to day 1. */
+// Day #1 of every puzzle. Earlier dates clamp to day 1.
 export const EPOCH_UTC = '2026-06-01'
 
 export const STORAGE_PREFIX = 'breachle'
@@ -20,10 +17,10 @@ export type GameMeta = {
 	tagline: string
 	icon: string
 	path: string
-	/** Tailwind classes wired to the per-game accent tokens. */
+	// Tailwind classes for the per-game accent.
 	accentBg: string
 	accentText: string
-	/** Raw accent color for `--glow` neon shadows. */
+	// Hex accent for the --glow neon shadow.
 	glow: string
 }
 
