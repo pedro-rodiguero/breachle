@@ -3,8 +3,8 @@
 	import type { GameStats } from '$lib/storage'
 	import type { ShareInput } from '$lib/share'
 	import Countdown from './Countdown.svelte'
-	import ShareButton from './ShareButton.svelte'
-	import ShareCard from './ShareCard.svelte'
+	import Modal from './Modal.svelte'
+	import ShareSheet from './ShareSheet.svelte'
 
 	let {
 		heading,
@@ -23,6 +23,8 @@
 		archive?: boolean
 		children?: Snippet
 	} = $props()
+
+	let shareOpen = $state(false)
 </script>
 
 <section aria-label="Today's result" class="glass bracket animate-rise p-6 text-center">
@@ -59,11 +61,21 @@
 	{#if children}
 		{@render children()}
 	{/if}
-	<ShareCard {share} />
 	<div class="flex flex-col items-center gap-3">
-		<ShareButton {share} />
+		<button
+			type="button"
+			onclick={() => (shareOpen = true)}
+			class="glow inline-flex items-center gap-2 rounded-tile bg-brand-deep px-6 py-3 font-mono text-base font-bold tracking-wider text-black transition hover:brightness-115 active:translate-y-0.5"
+			style="--glow: #18e06a"
+		>
+			[ SHARE RESULT ]
+		</button>
 		{#if !archive}
 			<Countdown />
 		{/if}
 	</div>
 </section>
+
+<Modal bind:open={shareOpen} title="Share your result">
+	<ShareSheet {share} />
+</Modal>
