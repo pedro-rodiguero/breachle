@@ -3,6 +3,7 @@
 	import GameHeader from '$lib/components/GameHeader.svelte'
 	import ResultPanel from '$lib/components/ResultPanel.svelte'
 	import { GAME_BY_ID } from '$lib/config'
+	import { COLUMNS, compareGuess, SHARE_EMOJI, type Cmp } from '$lib/cvedle'
 	import { CVES, type Cve } from '$lib/data/cves'
 	import { archiveDateFromHash, DailyGame } from '$lib/daily.svelte'
 	import { dailyPick } from '$lib/seed'
@@ -17,13 +18,6 @@
 	const game = new DailyGame<Progress, Result>('cvedle', archiveDateFromHash())
 	const answer = dailyPick('cvedle', CVES, game.todayKey)
 
-	function severityLabel(cvss: number): string {
-		if (cvss >= 9) return 'Critical'
-		if (cvss >= 7) return 'High'
-		if (cvss >= 4) return 'Medium'
-		return 'Low'
-	}
-
 	// Blank out the answer name(s) where they appear in the description.
 	function redact(text: string, cve: Cve): string {
 		let out = text
@@ -33,15 +27,6 @@
 		}
 		return out
 	}
-
-	const clues = [
-		{ icon: '🌡️', label: 'Severity', value: `${severityLabel(answer.cvss)} (CVSS ${answer.cvss.toFixed(1)})` },
-		{ icon: '📡', label: 'Attack vector', value: answer.vector },
-		{ icon: '📅', label: 'Year disclosed', value: String(answer.year) },
-		{ icon: '📦', label: 'Affected product', value: answer.product },
-		{ icon: '🧬', label: 'Vulnerability type', value: answer.cwe },
-		{ icon: '📰', label: 'Description', value: redact(answer.description, answer) }
-	]
 
 	function matchCve(q: string): Cve | undefined {
 		const needle = q.trim().toLowerCase()
@@ -68,9 +53,26 @@
 		).slice(0, 7)
 	})
 
-	const visibleClues = $derived(game.done ? clues.length : Math.min(guesses.length + 1, clues.length))
-	const shareLine = $derived(guesses.map((g) => (g === answer.id ? '🟩' : '🟥')).join(''))
+	// Newest guess on top, scored against the answer.
+	const rows = $derived(
+		guesses
+			.map((g, i) => {
+				const cve = CVES.find((c) => c.id === g)!
+				return { ...compareGuess(cve, answer), last: i === guesses.length - 1 }
+			})
+			.reverse()
+	)
+	const shareRows = $derived(
+		guesses.map((g) => {
+			const cve = CVES.find((c) => c.id === g)!
+			return compareGuess(cve, answer).cells.map((c) => SHARE_EMOJI[c.status]).join('')
+		})
+	)
 	const scoreline = $derived(game.result?.won ? `${guesses.length}/${MAX_GUESSES}` : `X/${MAX_GUESSES}`)
+
+	function cellClass(s: Cmp): string {
+		return s === 'hit' ? 'bg-good text-black' : s === 'near' ? 'bg-warn text-black' : 'bg-bad text-white'
+	}
 
 	function updateQuery(q: string) {
 		query = q
@@ -112,14 +114,13 @@
 
 {#snippet rules()}
 	<p>
-		Guess the famous vulnerability in {MAX_GUESSES} tries. Type a name and pick from the
-		suggestions — only vulns in today's database count.
+		Guess the famous vulnerability in {MAX_GUESSES} tries. Pick any vuln in today's database.
 	</p>
 	<p>
-		You start with one clue. Every wrong guess reveals another: attack vector, year, product,
-		vulnerability type, and finally a redacted description.
+		Each guess is scored against the answer, column by column: 🟩 exact, 🟨 close, 🟥 off. The
+		year shows ↑ / ↓ pointing toward the answer.
 	</p>
-	<p>Come back tomorrow for a new vuln. 🟩 you got it, 🟥 a miss.</p>
+	<p>Columns: severity band, attack vector, vendor, year, and vulnerability type.</p>
 {/snippet}
 
 {#if justWon}
@@ -129,45 +130,76 @@
 <div class="space-y-5">
 	<GameHeader game={GAME} day={game.day} streak={game.stats.streak} archive={game.archive} {rules} />
 
-	<!-- Clue stack -->
-	<section aria-label="Clues" class="space-y-2.5">
-		{#each clues.slice(0, visibleClues) as clue (clue.label)}
-			<div class="glass flex items-start gap-3 p-3.5" in:fly={{ y: 12, duration: 300 }}>
-				<span aria-hidden="true" class="text-xl">{clue.icon}</span>
-				<div class="min-w-0">
-					<p class="font-mono text-xs font-bold tracking-wide text-ink-faint uppercase">
-						{clue.label}
-					</p>
-					<p class="font-semibold leading-snug">{clue.value}</p>
-				</div>
-			</div>
-		{/each}
-		{#if !game.done && visibleClues < clues.length}
-			<p class="px-1 font-mono text-xs font-medium text-ink-faint">
-				{clues.length - visibleClues} more {clues.length - visibleClues === 1 ? 'clue' : 'clues'} locked
-				— wrong guesses reveal them.
+	{#if guesses.length === 0 && !game.done}
+		<div class="glass bracket p-5 text-center">
+			<p class="font-mono text-sm font-bold text-ink-soft">
+				<span class="text-cve">&gt;</span> unknown vulnerability detected
 			</p>
-		{/if}
-	</section>
+			<p class="mt-1 font-mono text-xs text-ink-faint">
+				Name a vuln below. Each guess lights up the attributes it shares with the answer.
+			</p>
+		</div>
+	{/if}
 
-	<!-- Past guesses -->
+	<!-- Guess grid (Gamedle-style attribute comparison) -->
 	{#if guesses.length > 0}
-		<section aria-label="Your guesses" class="space-y-2">
-			{#each guesses as g, i (g)}
-				{@const correct = g === answer.id}
-				{@const last = i === guesses.length - 1}
+		<section aria-label="Your guesses" class="-mx-1 overflow-x-auto px-1 pb-1">
+			<div class="min-w-max space-y-1.5">
 				<div
-					class="flex items-center gap-3 rounded-tile border p-3 font-bold
-						{correct
-						? 'animate-pop border-good/60 bg-good/10 text-good'
-						: `border-bad/40 bg-bad/10 ${last && shaking ? 'animate-shake' : ''}`}"
+					class="flex gap-1.5 font-mono text-[9px] font-bold tracking-wide text-ink-faint uppercase"
 				>
-					<span aria-hidden="true">{correct ? '🟩' : '🟥'}</span>
-					<span class="text-ink">{g}</span>
-					<span class="ml-auto font-mono text-xs text-ink-faint">{i + 1}/{MAX_GUESSES}</span>
+					<div class="w-28 shrink-0 px-1">Guess</div>
+					{#each COLUMNS as col (col)}
+						<div class="w-[4.6rem] shrink-0 text-center">{col}</div>
+					{/each}
 				</div>
-			{/each}
+
+				{#each rows as row (row.name)}
+					<div
+						class="flex gap-1.5 {row.last && shaking ? 'animate-shake' : ''}"
+						in:fly={{ y: 10, duration: 250 }}
+					>
+						<div
+							class="flex w-28 shrink-0 items-center gap-1 rounded-tile border px-2 py-1.5 font-mono text-xs font-bold
+								{row.correct ? 'border-good/60 bg-good/10 text-good' : 'border-edge bg-card'}"
+						>
+							<span aria-hidden="true">{row.correct ? '🟩' : '🟥'}</span>
+							<span class="truncate text-ink" title={row.name}>{row.name}</span>
+						</div>
+						{#each row.cells as cell, ci (ci)}
+							<div
+								class="grid w-[4.6rem] shrink-0 place-items-center rounded-tile px-1 py-1.5 text-center font-mono text-[10px] leading-tight font-bold {cellClass(
+									cell.status
+								)}"
+								title={cell.full}
+							>
+								<span class="line-clamp-2 max-w-full">
+									{cell.text}{#if cell.arrow}<span class="ml-0.5"
+											>{cell.arrow === 'up' ? '↑' : '↓'}</span
+										>{/if}
+								</span>
+							</div>
+						{/each}
+					</div>
+				{/each}
+			</div>
 		</section>
+		<p class="-mt-2 px-1 font-mono text-[10px] text-ink-faint">
+			🟩 exact · 🟨 close · 🟥 off · ↑/↓ year is higher / lower
+		</p>
+	{/if}
+
+	<!-- Declassified hint once the player is a few guesses in -->
+	{#if !game.done && guesses.length >= 3}
+		<div class="glass flex items-start gap-3 p-3.5" in:fly={{ y: 8, duration: 250 }}>
+			<span aria-hidden="true" class="text-lg">📰</span>
+			<div class="min-w-0">
+				<p class="font-mono text-[10px] font-bold tracking-wide text-ink-faint uppercase">
+					Declassified case file
+				</p>
+				<p class="text-sm leading-snug font-medium text-ink-soft">{redact(answer.description, answer)}</p>
+			</div>
+		</div>
 	{/if}
 
 	{#if game.done}
@@ -175,13 +207,13 @@
 			heading={game.result!.won ? 'Patched! 🎉' : 'Breach! 💥'}
 			subheading={game.result!.won
 				? `You named it in ${guesses.length} ${guesses.length === 1 ? 'guess' : 'guesses'}.`
-				: 'Out of guesses — better luck tomorrow.'}
-			gridPreview={[shareLine || '—']}
+				: 'Out of guesses. Better luck tomorrow.'}
+			gridPreview={shareRows}
 			share={{
 				gameName: GAME.name,
 				dayNumber: game.day,
 				scoreline,
-				lines: [shareLine || '—'],
+				lines: shareRows,
 				icon: GAME.icon,
 				accent: GAME.glow
 			}}
