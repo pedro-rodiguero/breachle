@@ -20,7 +20,7 @@
 	--edge: rgb(77 255 143 / 0.16);
 	--edge-strong: rgb(77 255 143 / 0.45);
 	--glow-opacity: 1;
-	--scan-opacity: 0.5;
+	--scan-opacity: 0.85;
 }
 
 .light {
@@ -34,7 +34,7 @@
 	--edge: rgb(13 120 60 / 0.18);
 	--edge-strong: rgb(13 120 60 / 0.4);
 	--glow-opacity: 0.4;
-	--scan-opacity: 0.12;
+	--scan-opacity: 0.22;
 }
 
 @theme inline {
@@ -149,8 +149,8 @@
 		99% { opacity: 0.92; }
 	}
 	@keyframes scan {
-		from { transform: translateY(-100%); }
-		to { transform: translateY(100%); }
+		from { transform: translateY(-25vh); }
+		to { transform: translateY(125vh); }
 	}
 }
 
@@ -163,7 +163,7 @@ body {
 	transition: background-color 250ms ease, color 250ms ease;
 }
 
-/* Ambient backdrop: acid radial glows + CRT vignette. */
+/* Ambient backdrop: acid radial glows + phosphor grid + CRT vignette. */
 body::before {
 	content: '';
 	position: fixed;
@@ -172,13 +172,16 @@ body::before {
 	pointer-events: none;
 	opacity: var(--glow-opacity);
 	background:
-		radial-gradient(56rem 34rem at 12% -8%, rgb(77 255 143 / 0.14), transparent 60%),
-		radial-gradient(46rem 30rem at 112% 18%, rgb(255 224 0 / 0.08), transparent 60%),
-		radial-gradient(40rem 30rem at 50% 120%, rgb(47 230 192 / 0.07), transparent 60%),
-		radial-gradient(120% 120% at 50% 50%, transparent 55%, rgb(0 0 0 / 0.55) 100%);
+		linear-gradient(rgb(77 255 143 / 0.045) 1px, transparent 1px),
+		linear-gradient(90deg, rgb(77 255 143 / 0.045) 1px, transparent 1px),
+		radial-gradient(56rem 34rem at 12% -8%, rgb(77 255 143 / 0.16), transparent 60%),
+		radial-gradient(46rem 30rem at 112% 18%, rgb(255 224 0 / 0.09), transparent 60%),
+		radial-gradient(40rem 30rem at 50% 120%, rgb(47 230 192 / 0.08), transparent 60%),
+		radial-gradient(120% 120% at 50% 50%, transparent 50%, rgb(0 0 0 / 0.6) 100%);
+	background-size: 42px 42px, 42px 42px, auto, auto, auto, auto;
 }
 
-/* CRT scanlines (static texture) — kept subtle for readability. */
+/* CRT scanlines (static texture). */
 body::after {
 	content: '';
 	position: fixed;
@@ -190,9 +193,29 @@ body::after {
 		to bottom,
 		rgb(0 0 0 / 0) 0,
 		rgb(0 0 0 / 0) 2px,
-		rgb(0 0 0 / 0.22) 3px,
+		rgb(0 0 0 / 0.3) 3px,
 		rgb(0 0 0 / 0) 4px
 	);
+}
+
+/* Slow CRT scan beam drifting down the screen (decorative, above content
+ * but pointer-transparent and very faint). */
+.scanbeam {
+	position: fixed;
+	inset-inline: 0;
+	top: 0;
+	height: 22vh;
+	z-index: 30;
+	pointer-events: none;
+	background: linear-gradient(
+		to bottom,
+		transparent,
+		rgb(77 255 143 / 0.045) 42%,
+		rgb(198 247 216 / 0.06) 50%,
+		rgb(77 255 143 / 0.03) 58%,
+		transparent
+	);
+	animation: var(--animate-scan);
 }
 
 /* A slow brightness flicker on the whole app — tasteful, off for reduced-motion. */
@@ -208,6 +231,9 @@ body::after {
 	border-radius: var(--radius-card);
 	backdrop-filter: blur(6px);
 	-webkit-backdrop-filter: blur(6px);
+	box-shadow:
+		inset 0 1px 0 rgb(77 255 143 / 0.08),
+		0 6px 24px -10px rgb(0 0 0 / 0.7);
 }
 
 /* Corner brackets drawn as a single overlay — the HUD/boot-log signature. */
@@ -286,4 +312,5 @@ body::after {
 		transition-duration: 0.01ms !important;
 	}
 	body::after { opacity: calc(var(--scan-opacity) * 0.5); }
+	.scanbeam { display: none; }
 }

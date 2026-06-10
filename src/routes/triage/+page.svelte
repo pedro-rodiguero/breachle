@@ -7,7 +7,7 @@
 	import { DailyGame } from '$lib/daily.svelte'
 	import { dailyRng, shuffleWith } from '$lib/seed'
 	import { flip } from 'svelte/animate'
-	import { scale } from 'svelte/transition'
+	import { fly, scale } from 'svelte/transition'
 
 	const MAX_MISTAKES = 4
 	const GAME = GAME_BY_ID.triage
@@ -49,6 +49,24 @@
 	let toast = $state('')
 	let justWon = $state(false)
 	let toastTimer: ReturnType<typeof setTimeout>
+
+	/* Staged end-of-game reveal: banners decrypt one at a time, then the
+	 * result panel drops in. Pages restored in a finished state skip it. */
+	let visibleBanners = $state(game.done ? 4 : 0)
+	let showPanel = $state(game.done)
+
+	function runReveal(from: number) {
+		visibleBanners = from
+		const step = () => {
+			if (visibleBanners < 4) {
+				visibleBanners += 1
+				setTimeout(step, 850)
+			} else {
+				setTimeout(() => (showPanel = true), 750)
+			}
+		}
+		setTimeout(step, 650)
+	}
 
 	const tileLabel = (id: number) => puzzle.groups[id >> 2].tiles[id & 3]
 	const remaining = $derived(order.filter((id) => !solved.includes(id >> 2)))
@@ -98,6 +116,8 @@
 			if (solved.length === 4) {
 				justWon = true
 				game.complete({ won: true, mistakes, history }, true)
+				// All four already on screen — quick beat, then the panel.
+				runReveal(4)
 			} else {
 				game.save({ solved, mistakes, history })
 			}
@@ -107,6 +127,8 @@
 			setTimeout(() => (shaking = false), 500)
 			if (mistakes >= MAX_MISTAKES) {
 				game.complete({ won: false, mistakes, history }, false)
+				// Decrypt the unsolved categories one by one.
+				runReveal(solved.length)
 			} else {
 				if (best === 3) showToast('One away! 😬')
 				game.save({ solved, mistakes, history })
@@ -120,18 +142,18 @@
 		16 alert artifacts hit your SOC queue. Group them into 4 hidden attack types, 4 tiles each.
 	</p>
 	<p>
-		Select 4 tiles and hit <strong>Submit</strong>. Wrong combos cost a life — you have
+		Select 4 tiles and hit <strong>[ SUBMIT ]</strong>. Wrong combos cost a life — you have
 		{MAX_MISTAKES}. Watch for red herrings: some artifacts look like one attack but belong to
 		another.
 	</p>
 	<p>Colors show difficulty: 🟨 easiest → 🟪 trickiest.</p>
 {/snippet}
 
-{#snippet groupBanner(g: number, i: number)}
+{#snippet groupBanner(g: number, _i: number)}
 	{@const group = puzzle.groups[g]}
 	<div
 		class="animate-pop rounded-tile p-3 text-center {DIFF_BG[group.difficulty]}"
-		style="animation-delay: {i * 90}ms; color: #12162b"
+		style="color: #12162b"
 	>
 		<p class="font-mono text-sm font-extrabold tracking-wide uppercase">{group.category}</p>
 		<p class="font-mono text-xs leading-snug font-medium">{group.tiles.join(' · ')}</p>
@@ -155,21 +177,37 @@
 
 	{#if game.done}
 		<div class="space-y-2">
-			{#each revealOrder as g, i (g)}
-				{@render groupBanner(g, i)}
+			{#each revealOrder.slice(0, visibleBanners) as g, i (g)}
+				<div in:fly={{ y: 18, duration: 450 }}>
+					{@render groupBanner(g, i)}
+				</div>
 			{/each}
 		</div>
-		<ResultPanel
-			heading={game.result!.won ? 'Queue cleared! 🎉' : 'Alert fatigue 😵'}
-			subheading={game.result!.won
-				? mistakes === 0
-					? 'Perfect triage — zero mistakes.'
-					: `Solved with ${mistakes} ${mistakes === 1 ? 'mistake' : 'mistakes'}.`
-				: 'Too many misfiled alerts. The board is revealed above.'}
-			gridPreview={shareLines}
-			share={{ gameName: GAME.name, dayNumber: game.day, lines: shareLines }}
-			stats={game.stats}
-		/>
+		{#if !showPanel}
+			<p class="px-1 font-mono text-xs font-bold tracking-widest text-brand uppercase" role="status">
+				&gt; decrypting incident report… [{visibleBanners}/4]<span class="animate-blink">▮</span>
+			</p>
+		{:else}
+			<div in:fly={{ y: 22, duration: 450 }}>
+				<ResultPanel
+					heading={game.result!.won ? 'Queue cleared! 🎉' : 'Alert fatigue 😵'}
+					subheading={game.result!.won
+						? mistakes === 0
+							? 'Perfect triage — zero mistakes.'
+							: `Solved with ${mistakes} ${mistakes === 1 ? 'mistake' : 'mistakes'}.`
+						: 'Too many misfiled alerts. The board is revealed above.'}
+					gridPreview={shareLines}
+					share={{
+						gameName: GAME.name,
+						dayNumber: game.day,
+						lines: shareLines,
+						icon: GAME.icon,
+						accent: GAME.glow
+					}}
+					stats={game.stats}
+				/>
+			</div>
+		{/if}
 	{:else}
 		<div
 			class="grid grid-cols-4 gap-2 {shaking ? 'animate-shake' : ''}"
@@ -215,7 +253,7 @@
 				class="glass flex-1 py-3 font-semibold text-ink-soft transition hover:border-edge-strong active:translate-y-0.5"
 				style="border-radius: var(--radius-tile)"
 			>
-				Shuffle
+				[ SHUFFLE ]
 			</button>
 			<button
 				type="button"
@@ -224,7 +262,7 @@
 				class="glass flex-1 py-3 font-semibold text-ink-soft transition hover:border-edge-strong active:translate-y-0.5 disabled:opacity-40"
 				style="border-radius: var(--radius-tile)"
 			>
-				Deselect
+				[ DESELECT ]
 			</button>
 			<button
 				type="button"
@@ -233,7 +271,7 @@
 				class="glow flex-1 rounded-tile bg-triage-deep py-3 font-bold text-black transition hover:brightness-115 active:translate-y-0.5 disabled:opacity-40"
 				style="--glow: #ffb000"
 			>
-				Submit
+				[ SUBMIT ]
 			</button>
 		</div>
 	{/if}

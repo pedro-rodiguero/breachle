@@ -13,6 +13,10 @@ export type ShareInput = {
   scoreline?: string
   /** Emoji rows, no spoilers. */
   lines: string[]
+  /** Game icon emoji, drawn on the rendered share card. */
+  icon?: string
+  /** Game accent color (hex), used on the rendered share card. */
+  accent?: string
 }
 
 export function buildShareText({ gameName, dayNumber, scoreline, lines }: ShareInput): string {

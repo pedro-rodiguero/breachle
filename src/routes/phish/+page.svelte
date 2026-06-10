@@ -147,7 +147,9 @@
 				gameName: GAME.name,
 				dayNumber: game.day,
 				scoreline: `${finalScore}/${items.length}`,
-				lines: [gridLine(finalAnswers)]
+				lines: [gridLine(finalAnswers)],
+				icon: GAME.icon,
+				accent: GAME.glow
 			}}
 			stats={game.stats}
 		>
@@ -205,10 +207,10 @@
 						<button
 							type="button"
 							onclick={advance}
-							class="glow mt-4 w-full rounded-tile bg-phish-deep py-3 font-bold text-white transition hover:brightness-115 active:translate-y-0.5"
+							class="glow mt-4 w-full rounded-tile bg-phish-deep py-3 font-mono font-bold tracking-wider text-white transition hover:brightness-115 active:translate-y-0.5"
 							style="--glow: #2fe6c0"
 						>
-							{answers.length >= items.length ? 'See results' : 'Next →'}
+							{answers.length >= items.length ? '[ SEE RESULTS ]' : '[ NEXT → ]'}
 						</button>
 					</div>
 				{:else}

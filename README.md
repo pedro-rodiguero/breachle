@@ -11,7 +11,7 @@ Four daily browser puzzle games with a cybersecurity theme, à la Wordle / Conne
 | 🎣 **Phish or Legit** | Judge 5 rendered emails/URLs, then see the tells (lookalike domains, mismatched links, SPF fails…) |
 | 👾 **Malware or…?** | Four-way category call — malware, Pokémon, band, or something else — over a weighted deck; only exact calls score |
 
-Every game has streaks, refresh-safe in-progress state, a post-game lock with countdown to UTC midnight, and a spoiler-free emoji share grid.
+Every game has streaks, refresh-safe in-progress state, a post-game lock with countdown to UTC midnight, and two share modes: a spoiler-free emoji text grid plus a canvas-rendered **share card** PNG (terminal-styled, per-game accent) that goes out via the native share sheet, clipboard, or download.
 
 ## Stack
 
@@ -41,6 +41,7 @@ npm run check    # svelte-check (types + a11y)
 - **Persistence** — [src/lib/storage.ts](src/lib/storage.ts): per-game record with lifetime stats + today's progress/result; streaks reset when a day is skipped.
 - **Daily state machine** — [src/lib/daily.svelte.ts](src/lib/daily.svelte.ts): rune-based `DailyGame` class every game shares (restore → save → complete-once → lock).
 - **Share grids** — [src/lib/share.ts](src/lib/share.ts): per-game emoji lines + clipboard with fallback.
+- **Share cards** — [src/lib/sharecard.ts](src/lib/sharecard.ts): 1080×1080 canvas PNG of the day's result (scanlines, corner brackets, emoji grid); [ShareCard.svelte](src/lib/components/ShareCard.svelte) handles native share → image clipboard → download fallbacks.
 - **Datasets** — [src/lib/data/](src/lib/data/): typed TS modules, human-audited (see [SEED_DATA_AUDIT.md](SEED_DATA_AUDIT.md)); append entries, no code changes needed.
 - **Design system** — [src/app.css](src/app.css): dark-first acid-hacker tokens (`.light` opts out), hard terminal panels with corner-bracket framing, CRT scanlines/vignette, phosphor + RGB-split glitch helpers, per-game `--glow` accents.
 - **Rename the brand** by editing `APP_NAME` in [src/lib/config.ts](src/lib/config.ts).

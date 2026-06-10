@@ -4,6 +4,7 @@
 	import type { ShareInput } from '$lib/share'
 	import Countdown from './Countdown.svelte'
 	import ShareButton from './ShareButton.svelte'
+	import ShareCard from './ShareCard.svelte'
 
 	let {
 		heading,
@@ -50,6 +51,7 @@
 	{#if children}
 		{@render children()}
 	{/if}
+	<ShareCard {share} />
 	<div class="flex flex-col items-center gap-3">
 		<ShareButton {share} />
 		<Countdown />

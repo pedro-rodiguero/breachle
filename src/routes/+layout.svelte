@@ -19,6 +19,8 @@
 	})
 </script>
 
+<div aria-hidden="true" class="scanbeam"></div>
+
 <div class="mx-auto flex min-h-dvh w-full max-w-2xl flex-col px-4 pb-10">
 	<header class="flex items-center justify-between py-4">
 		<a

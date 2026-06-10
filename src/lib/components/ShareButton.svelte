@@ -19,11 +19,10 @@
 <button
 	type="button"
 	onclick={onCopy}
-	class="glow inline-flex items-center gap-2 rounded-tile bg-brand-deep px-5 py-3 text-base font-bold text-white transition hover:brightness-115 active:translate-y-0.5"
+	class="glow inline-flex items-center gap-2 rounded-tile bg-brand-deep px-5 py-3 font-mono text-base font-bold tracking-wider text-black transition hover:brightness-115 active:translate-y-0.5"
 	style="--glow: #18e06a"
 >
-	<span aria-hidden="true">{status === 'copied' ? '✅' : '📋'}</span>
-	{status === 'copied' ? 'Copied!' : status === 'failed' ? 'Copy failed' : 'Copy result'}
+	{status === 'copied' ? '[ COPIED ✓ ]' : status === 'failed' ? '[ COPY FAILED ]' : '[ COPY TEXT ]'}
 	<span aria-live="polite" class="sr-only">
 		{status === 'copied' ? 'Result copied to clipboard' : ''}
 	</span>

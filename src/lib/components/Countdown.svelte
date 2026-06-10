@@ -17,7 +17,7 @@
 	})
 </script>
 
-<p class="text-sm text-ink-soft">
-	Next puzzle in
-	<span class="font-mono text-base font-semibold tabular-nums text-ink">{formatted}</span>
+<p class="font-mono text-sm text-ink-soft">
+	<span class="text-brand">&gt;</span> next drop in
+	<span class="text-base font-semibold tabular-nums text-brand phosphor">{formatted}</span>
 </p>

@@ -177,7 +177,14 @@
 				? `You named it in ${guesses.length} ${guesses.length === 1 ? 'guess' : 'guesses'}.`
 				: 'Out of guesses — better luck tomorrow.'}
 			gridPreview={[shareLine || '—']}
-			share={{ gameName: GAME.name, dayNumber: game.day, scoreline, lines: [shareLine || '—'] }}
+			share={{
+				gameName: GAME.name,
+				dayNumber: game.day,
+				scoreline,
+				lines: [shareLine || '—'],
+				icon: GAME.icon,
+				accent: GAME.glow
+			}}
 			stats={game.stats}
 		>
 			<div class="mb-5 rounded-tile border border-edge bg-inset p-4 text-left">
@@ -219,7 +226,7 @@
 					class="glow shrink-0 rounded-tile bg-cve-deep px-5 font-bold text-white transition hover:brightness-115 active:translate-y-0.5 disabled:opacity-40"
 					style="--glow: #ff4d6d"
 				>
-					Guess
+					[ GUESS ]
 				</button>
 			</div>
 			{#if suggestions.length > 0}
