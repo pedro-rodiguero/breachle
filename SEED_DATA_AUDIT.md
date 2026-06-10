@@ -1,6 +1,8 @@
 # Seed data audit sheet
 
-Every entry shipped in `src/data/`, laid out for human fact-checking. Items flagged **⚠ VERIFY** carry a claim I am not fully certain of — check those first. Everything else I believe to be accurate, but all real-world claims (CVSS scores, years, attributions, fun facts) deserve a pass before publishing.
+> **Status: audited & resolved (2026-06-10).** All flagged items were human-checked; corrections applied: EternalBlue 8.1→8.8, GHOST 10.0→9.8, Stagefright "≈1 billion"→"950 million", disclosure-year convention adopted (PwnKit = 2022), `cvssVersion`+`sourceUrl` fields added to every CVE; Mydoom figure softened, SKARPSNO→SMÅSPORRE, Behemoth→Opeth, Remix fact rewritten (Remix 3 no-React reboot), POÄNG fact now mentions POEM; phish item 9 → cloudflare.com/learning/ root + "fictional domains" footer in the game shell; Triage puzzle 4 "login from new country"→"valid creds via VPN, no MFA". Tables below reflect the corrected state.
+
+Every entry shipped in `src/data/`, laid out for human fact-checking. All real-world claims (CVSS scores, years, attributions, fun facts) deserve a fresh pass whenever entries are added.
 
 Sources of truth I'd recommend: NVD (nvd.nist.gov) for CVSS/CWE/years, vendor advisories, and reputable write-ups (Microsoft MSRC, Cloudflare/Akamai blogs, Krebs, Wikipedia for the historical worms).
 
@@ -8,34 +10,34 @@ Sources of truth I'd recommend: NVD (nvd.nist.gov) for CVSS/CWE/years, vendor ad
 
 ## 1. CVE-dle — `src/data/cves.ts` (31 entries)
 
-CVSS column is the claim shown to players as the first clue. "Vector" and "Type" are simplified, player-facing labels (not strict CVSS/CWE strings) — judge them for fairness, not formal exactness.
+Every entry now carries `cvssVersion` (all "3.1") and `sourceUrl` (NVD detail page). CVSS column is the claim shown to players as the first clue. "Vector" and "Type" are simplified, player-facing labels (not strict CVSS/CWE strings) — judge them for fairness, not formal exactness.
 
 | # | Answer | CVE | CVSS | Vector | Year | Product | Type | Flags |
 |---|--------|-----|------|--------|------|---------|------|-------|
 | 1 | Heartbleed | CVE-2014-0160 | 7.5 | Network | 2014 | OpenSSL | Buffer over-read | |
 | 2 | Log4Shell | CVE-2021-44228 | 10.0 | Network | 2021 | Apache Log4j 2 | JNDI / expression injection | |
 | 3 | Shellshock | CVE-2014-6271 | 9.8 | Network | 2014 | GNU Bash | OS command injection | |
-| 4 | EternalBlue | CVE-2017-0144 | 8.1 | Network | 2017 | Windows SMBv1 | RCE (memory corruption) | ⚠ VERIFY CVSS 8.1 (NVD v3.1) |
-| 5 | Spectre | CVE-2017-5753 | 5.6 | Local | 2018 | Modern CPUs | Side-channel disclosure | ⚠ VERIFY CVSS 5.6 |
-| 6 | Meltdown | CVE-2017-5754 | 5.6 | Local | 2018 | Intel CPUs | Side-channel disclosure | ⚠ VERIFY CVSS 5.6 |
-| 7 | Dirty COW | CVE-2016-5195 | 7.0 | Local | 2016 | Linux kernel | Race condition | ⚠ VERIFY CVSS 7.0 |
+| 4 | EternalBlue | CVE-2017-0144 | 8.8 | Network | 2017 | Windows SMBv1 | RCE (memory corruption) | ✓ corrected from 8.1 |
+| 5 | Spectre | CVE-2017-5753 | 5.6 | Local | 2018 | Modern CPUs | Side-channel disclosure | ✓ confirmed |
+| 6 | Meltdown | CVE-2017-5754 | 5.6 | Local | 2018 | Intel CPUs | Side-channel disclosure | ✓ confirmed |
+| 7 | Dirty COW | CVE-2016-5195 | 7.0 | Local | 2016 | Linux kernel | Race condition | ✓ confirmed |
 | 8 | BlueKeep | CVE-2019-0708 | 9.8 | Network | 2019 | Windows RDP | Use after free | |
-| 9 | KRACK | CVE-2017-13077 | 6.8 | Adjacent network | 2017 | WPA2 (Wi-Fi) | Cryptographic weakness | ⚠ VERIFY CVSS 6.8 |
-| 10 | POODLE | CVE-2014-3566 | 3.4 | Network | 2014 | SSL 3.0 | Padding oracle | ⚠ VERIFY CVSS 3.4 |
-| 11 | DROWN | CVE-2016-0800 | 5.9 | Network | 2016 | SSLv2 / OpenSSL | Cryptographic weakness | ⚠ VERIFY CVSS 5.9 |
-| 12 | GHOST | CVE-2015-0235 | 10.0 | Network | 2015 | GNU glibc | Buffer overflow | ⚠ VERIFY — 10.0 is the CVSS **v2** score; confirm what NVD lists today |
-| 13 | Stagefright | CVE-2015-1538 | 9.8 | Network | 2015 | Android (libstagefright) | Integer overflow | ⚠ VERIFY CVSS 9.8; also the "~1 billion phones" claim in the description |
+| 9 | KRACK | CVE-2017-13077 | 6.8 | Adjacent network | 2017 | WPA2 (Wi-Fi) | Cryptographic weakness | ✓ confirmed |
+| 10 | POODLE | CVE-2014-3566 | 3.4 | Network | 2014 | SSL 3.0 | Padding oracle | ✓ confirmed |
+| 11 | DROWN | CVE-2016-0800 | 5.9 | Network | 2016 | SSLv2 / OpenSSL | Cryptographic weakness | ✓ confirmed |
+| 12 | GHOST | CVE-2015-0235 | 9.8 | Network | 2015 | GNU glibc | Buffer overflow | ✓ corrected to CVSS v3.1 9.8 |
+| 13 | Stagefright | CVE-2015-1538 | 9.8 | Network | 2015 | Android (libstagefright) | Integer overflow | ✓ confirmed; description now says "950 million" |
 | 14 | ProxyLogon | CVE-2021-26855 | 9.8 | Network | 2021 | Exchange Server | SSRF | |
 | 15 | PrintNightmare | CVE-2021-34527 | 8.8 | Network | 2021 | Windows Print Spooler | Improper privilege mgmt | |
 | 16 | Zerologon | CVE-2020-1472 | 10.0 | Network | 2020 | Microsoft Netlogon | Cryptographic weakness | |
 | 17 | Ghostcat | CVE-2020-1938 | 9.8 | Network | 2020 | Apache Tomcat (AJP) | File inclusion | |
 | 18 | Citrix ADC RCE | CVE-2019-19781 | 9.8 | Network | 2019 | Citrix ADC / Gateway | Path traversal | |
 | 19 | Follina | CVE-2022-30190 | 7.8 | Local | 2022 | Windows MSDT | RCE via URL handler | |
-| 20 | ProxyShell | CVE-2021-34473 | 9.8 | Network | 2021 | Exchange Server | Path confusion | ⚠ VERIFY CVSS 9.8 |
+| 20 | ProxyShell | CVE-2021-34473 | 9.8 | Network | 2021 | Exchange Server | Path confusion | ✓ confirmed |
 | 21 | Spring4Shell | CVE-2022-22965 | 9.8 | Network | 2022 | Spring Framework | Data binding / class injection | |
 | 22 | Text4Shell | CVE-2022-42889 | 9.8 | Network | 2022 | Apache Commons Text | Expression injection | |
 | 23 | Dirty Pipe | CVE-2022-0847 | 7.8 | Local | 2022 | Linux kernel | Improper initialization | |
-| 24 | PwnKit | CVE-2021-4034 | 7.8 | Local | 2022 | polkit (pkexec) | Memory corruption | Disclosed Jan 2022; CVE year is 2021 — check the "year" clue isn't confusing |
+| 24 | PwnKit | CVE-2021-4034 | 7.8 | Local | 2022 | polkit (pkexec) | Memory corruption | ✓ disclosure-year convention (2022) adopted dataset-wide |
 | 25 | Baron Samedit | CVE-2021-3156 | 7.8 | Local | 2021 | sudo | Heap overflow | |
 | 26 | SMBGhost | CVE-2020-0796 | 10.0 | Network | 2020 | Windows SMBv3 | Integer overflow | |
 | 27 | Citrix Bleed | CVE-2023-4966 | 9.4 | Network | 2023 | NetScaler ADC / Gateway | Buffer over-read | |
@@ -88,7 +90,7 @@ Note: `setuid on /usr/bin/find` could also be read as persistence — verify you
 | Web Exploitation (1) | `' OR 1=1--` · `<script>alert(1)</script>` · `../../etc/passwd` · `UNION SELECT creds` |
 | Denial of Service (2) | `SYN flood, 2M pps` · `NTP amplification ×556` · `10k half-open conns` · `memcached reflection` |
 | Defense Evasion (3) | `Event 1102: log cleared` · `AMSI bypass string` · `hollowed explorer.exe` · `timestomped binary` |
-| Initial Access (4) | `RDP open to internet` · `login from new country` · `unpatched VPN exploit` · `drive-by via ad network` |
+| Initial Access (4) | `RDP open to internet` · `valid creds via VPN, no MFA` · `unpatched VPN exploit` · `drive-by via ad network` |
 
 Factual details worth a check: NTP amplification factor "×556" (commonly cited as up to ~556×); Windows **Event ID 1102** = security audit log cleared.
 
@@ -118,10 +120,10 @@ All invented sample data (rendered inert in the UI — no real links). Audit for
 | 6 | email | Internal IT maintenance notice from `it-helpdesk@corp.globexbank.com`, intranet link matches, SPF/DKIM pass | **LEGIT** | matching internal domain; no action/credentials requested; matching intranet link |
 | 7 | url | `https://drive-google.com.download-share.cc/file/inv0ice.pdf.exe` | **PHISH** | brand-as-subdomain (real domain `download-share.cc`); double extension `.pdf.exe`; `inv0ice` |
 | 8 | email | "DocuSign" document from `dse@docusgn-mail.com`, **SPF fail** chip, generic body, 24h expiry | **PHISH** | misspelled domain (missing "i"); SPF fail; no document context; artificial expiry |
-| 9 | url | `https://www.cloudflare.com/learning/access-management/phishing-attack/` | **LEGIT** | real cloudflare.com; educational path; no credential bait |
+| 9 | url | `https://www.cloudflare.com/learning/` | **LEGIT** | real cloudflare.com; educational path; no credential bait |
 | 10 | email | "Netflix" payment-declined from `info@netflix-billingupdate.com` with billing link on same junk domain | **PHISH** | bolted-words domain; payment pressure; real services let you log in directly |
 
-One judgment call to audit: item 2's body addresses "pedrodev" — a sample username, fine for a game; change if you want it fully generic. Item 9 references a real Cloudflare URL path — confirm it exists or swap for the domain root.
+One judgment call to audit: item 2's body addresses "pedrodev" — a sample username, fine for a game; change if you want it fully generic. Item 9 now uses the cloudflare.com/learning/ root. The game shell also shows a permanent "all phishing domains are fictional, nothing clickable" footer.
 
 ---
 
@@ -133,7 +135,7 @@ One judgment call to audit: item 2's body addresses "pedrodev" — a sample user
 |---|------|------|---------------------|-------|
 | 1 | Emotet | botnet/loader | 2014 banking trojan → malware delivery service; taken down 2021 (Operation Ladybird) | |
 | 2 | Stuxnet | worm | physically destroyed Iranian uranium centrifuges via spin-speed sabotage | |
-| 3 | Mydoom | email worm | fastest-spreading email worm (2004); "~1 in 4 emails at peak" | ⚠ VERIFY peak share figure |
+| 3 | Mydoom | email worm | fastest-spreading email worm (2004); "by some estimates as much as a quarter of global email at its peak" | ✓ softened |
 | 4 | Conficker | worm | millions infected 2008; Microsoft's $250,000 bounty never claimed | |
 | 5 | Zeus | banking trojan | source code leaked 2011, spawned successor families | |
 | 6 | WannaCry | ransomware worm | stopped by kill-switch domain registration (Marcus Hutchins, 2017) | |
@@ -159,7 +161,7 @@ One judgment call to audit: item 2's body addresses "pedrodev" — a sample user
 | # | Name | Category | Fact | Flags |
 |---|------|----------|------|-------|
 | 23 | Gojira | metal band | French prog-metal; also Godzilla's Japanese name | |
-| 24 | Behemoth | metal band | Polish blackened death metal, fronted by Nergal | note: a few minor malware/tools have used this name — the game treats it as a band; acceptable? |
+| 24 | Opeth | metal band | Swedish progressive death metal turned ’70s prog worship | ✓ replaced Behemoth (name collision with minor malware/tools) |
 | 25 | Meshuggah | metal band | Swedish djent pioneers | |
 | 26 | Sabaton | metal band | Swedish power metal, songs about battles; sabaton = foot armor | |
 | 27 | Mastodon | metal band | Atlanta band; also the federated social network | |
@@ -172,21 +174,21 @@ One judgment call to audit: item 2's body addresses "pedrodev" — a sample user
 | 34 | Qwik | JS framework | resumable framework by Angular's creator (Miško Hevery) | |
 | 35 | Hono | JS framework | "flame" in Japanese — deliberate contrast with the Flame malware entry | |
 | 36 | Astro | JS framework | ships zero JS by default | |
-| 37 | Remix | JS framework | acquired by Shopify; merging into React Router | ⚠ check current status — this moves fast |
+| 37 | Remix | JS framework | v2 features merged into React Router; Remix 3 reborn as a from-scratch, no-React reboot | ✓ rewritten |
 | 38 | KALLAX | IKEA | the vinyl-collector cube shelf | |
 | 39 | MALM | IKEA | classic bed/dresser line | |
-| 40 | POÄNG | IKEA | bentwood chair sold since 1976 | |
+| 40 | POÄNG | IKEA | bentwood chair launched 1976 as “POEM”, renamed POÄNG in 1992 | ✓ |
 | 41 | HEMNES | IKEA | solid-pine series, Scandinavian place name | |
-| 42 | SKARPSNO | IKEA | bedding | ⚠ VERIFY it's a real current/past IKEA product name |
+| 42 | SMÅSPORRE | IKEA | duvet | ✓ replaced SKARPSNO |
 
 ---
 
 ## Quick audit checklist
 
-- [ ] All 9 ⚠ CVSS scores vs NVD (rows 4–7, 9–13, 20 in the CVE table)
-- [ ] PwnKit year clue (CVE says 2021, disclosure was Jan 2022)
-- [ ] Mydoom "1 in 4 emails" and Stagefright "billion phones" superlatives
-- [ ] SKARPSNO exists as an IKEA product
-- [ ] Remix/React Router merge status as of mid-2026
-- [ ] Triage red herrings are fair (one defensible home per tile)
-- [ ] No phishing sample accidentally uses a real registered domain in a harmful way (all fake domains are invented: `paypal-account-verify.com`, `account-restore.net`, `micros0ft-online.support`, `download-share.cc`, `docusgn-mail.com`, `netflix-billingupdate.com`, `corp.globexbank.com` — consider checking none are real live sites)
+- [x] All flagged CVSS scores vs NVD — EternalBlue→8.8, GHOST→9.8, rest confirmed
+- [x] PwnKit year clue — disclosure-year convention adopted dataset-wide
+- [x] Mydoom figure softened; Stagefright → "950 million"
+- [x] SKARPSNO → SMÅSPORRE (duvet)
+- [x] Remix fact rewritten for the Remix 3 no-React reboot
+- [x] Triage red herrings reviewed; puzzle 4 tile swapped for clarity
+- [x] Fictional-domain disclaimer added to the Phish or Legit shell

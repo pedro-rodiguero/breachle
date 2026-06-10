@@ -124,7 +124,7 @@ export const PHISH_ITEMS: PhishItem[] = [
   },
   {
     kind: 'url',
-    displayUrl: 'https://www.cloudflare.com/learning/access-management/phishing-attack/',
+    displayUrl: 'https://www.cloudflare.com/learning/',
     isPhish: false,
     tells: [
       'Registrable domain is cloudflare.com — a real, well-known company',

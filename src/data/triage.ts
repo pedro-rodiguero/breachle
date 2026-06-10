@@ -112,7 +112,7 @@ export const TRIAGE_PUZZLES: TriagePuzzle[] = [
       {
         category: 'Initial Access',
         difficulty: 4,
-        tiles: ['RDP open to internet', 'login from new country', 'unpatched VPN exploit', 'drive-by via ad network'],
+        tiles: ['RDP open to internet', 'valid creds via VPN, no MFA', 'unpatched VPN exploit', 'drive-by via ad network'],
       },
     ],
   },

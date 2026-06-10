@@ -166,6 +166,7 @@ export function PhishOrLegit() {
             ))}
           </div>
         </ResultPanel>
+        <SampleDataFooter />
       </div>
     )
   }
@@ -241,7 +242,16 @@ export function PhishOrLegit() {
           </div>
         )}
       </div>
+      <SampleDataFooter />
     </div>
+  )
+}
+
+function SampleDataFooter() {
+  return (
+    <p className="text-center text-xs font-semibold text-ink-faint">
+      🔒 All phishing domains and senders shown here are fictional. Nothing is clickable.
+    </p>
   )
 }
 
