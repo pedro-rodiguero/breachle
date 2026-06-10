@@ -24,7 +24,7 @@ export function buildShareText({ gameName, dayNumber, scoreline, lines }: ShareI
 }
 
 // Longer message for social composers (LinkedIn / X): result, a one-line
-// pitch, the link, and a few hashtags. Spoiler-free; only the grid travels.
+// pitch, the link, and a few hashtags. No spoilers; only the grid travels.
 export function buildSocialText(share: ShareInput): string {
   const day = String(share.dayNumber).padStart(3, '0')
   const title = [`${APP_NAME} · ${share.gameName} #${day}`, share.scoreline]
