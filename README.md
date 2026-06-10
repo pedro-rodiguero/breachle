@@ -7,7 +7,7 @@ A collection of four daily browser puzzle games with a cybersecurity theme, à l
 | 🐞 **CVE-dle** | Guess the famous vulnerability in 6 tries; each miss reveals another clue (severity, vector, year, product, type, description) |
 | 🚨 **Triage** | Connections-style: group 16 alert artifacts into 4 hidden attack types, 4 mistakes allowed |
 | 🎣 **Phish or Legit** | Judge 5 rendered emails/URLs, then see the tells (lookalike domains, mismatched links, SPF fails…) |
-| 👾 **Malware or…?** | Rapid round: real malware family, or a metal band / Pokémon / JS framework / IKEA product? |
+| 👾 **Malware or…?** | Rapid round: call each name's exact category — malware, Pokémon, band, or something else (JS framework, IKEA…). Weighted deck, only exact calls score |
 
 Every game has streaks, refresh-safe in-progress state, a post-game lock with countdown to UTC midnight, and a spoiler-free emoji share grid.
 
