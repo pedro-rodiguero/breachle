@@ -26,6 +26,38 @@ export function buildShareText({ gameName, dayNumber, scoreline, lines }: ShareI
   return parts.join('\n\n')
 }
 
+/**
+ * Longer-form message preloaded into social composers (LinkedIn / X):
+ * result up top, a one-line pitch, the link, and a couple of reach hashtags.
+ * Still spoiler-free — only the emoji grid travels.
+ */
+export function buildSocialText(share: ShareInput): string {
+  const day = String(share.dayNumber).padStart(3, '0')
+  const title = [`${APP_NAME} · ${share.gameName} #${day}`, share.scoreline]
+    .filter(Boolean)
+    .join(' — ')
+  return [
+    title,
+    '',
+    share.lines.join('\n'),
+    '',
+    'Daily cybersecurity puzzles — guess the vuln, triage the alerts, spot the phish. Same puzzle for everyone, every day.',
+    SITE_URL ? `Play today's drop → ${SITE_URL}` : 'New drop every day at 00:00 UTC.',
+    '',
+    '#cybersecurity #infosec #blueteam',
+  ].join('\n')
+}
+
+/** LinkedIn post composer with the text preloaded (desktop web). */
+export function linkedInComposeUrl(text: string): string {
+  return `https://www.linkedin.com/feed/?shareActive=true&text=${encodeURIComponent(text)}`
+}
+
+/** X/Twitter post intent with the text preloaded. */
+export function xComposeUrl(text: string): string {
+  return `https://x.com/intent/post?text=${encodeURIComponent(text)}`
+}
+
 /** Clipboard API with a hidden-textarea fallback for older mobile browsers. */
 export async function copyToClipboard(text: string): Promise<boolean> {
   try {

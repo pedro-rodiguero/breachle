@@ -42,6 +42,7 @@ npm run check    # svelte-check (types + a11y)
 - **Daily state machine** — [src/lib/daily.svelte.ts](src/lib/daily.svelte.ts): rune-based `DailyGame` class every game shares (restore → save → complete-once → lock).
 - **Share grids** — [src/lib/share.ts](src/lib/share.ts): per-game emoji lines + clipboard with fallback.
 - **Share cards** — [src/lib/sharecard.ts](src/lib/sharecard.ts): 1080×1080 canvas PNG of the day's result (scanlines, corner brackets, emoji grid); [ShareCard.svelte](src/lib/components/ShareCard.svelte) handles native share → image clipboard → download fallbacks.
+- **Social composers** — `[ POST → LINKEDIN ]` / `[ POST → X ]` open the network's composer with a ready-made post (result grid, one-line pitch, link, hashtags) preloaded, and copy the share-card PNG to the clipboard so the image is one Ctrl+V away. Set `SITE_URL` in [src/lib/config.ts](src/lib/config.ts) at deploy time so posts carry the play link.
 - **Datasets** — [src/lib/data/](src/lib/data/): typed TS modules, human-audited (see [SEED_DATA_AUDIT.md](SEED_DATA_AUDIT.md)); append entries, no code changes needed.
 - **Design system** — [src/app.css](src/app.css): dark-first acid-hacker tokens (`.light` opts out), hard terminal panels with corner-bracket framing, CRT scanlines/vignette, phosphor + RGB-split glitch helpers, per-game `--glow` accents.
 - **Rename the brand** by editing `APP_NAME` in [src/lib/config.ts](src/lib/config.ts).

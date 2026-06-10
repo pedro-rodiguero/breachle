@@ -1,5 +1,11 @@
 <script lang="ts">
-	import { buildShareText, type ShareInput } from '$lib/share'
+	import {
+		buildShareText,
+		buildSocialText,
+		linkedInComposeUrl,
+		xComposeUrl,
+		type ShareInput
+	} from '$lib/share'
 	import { renderShareCard, shareCardFilename } from '$lib/sharecard'
 
 	let { share }: { share: ShareInput } = $props()
@@ -76,6 +82,34 @@
 		saved: '[ SAVED ✓ ]',
 		failed: '[ FAILED ]'
 	}
+
+	/** Hint shown after opening a composer (e.g. "image copied — paste it"). */
+	let composeHint = $state('')
+
+	/**
+	 * Open a social composer with the post text preloaded. Best-effort copy
+	 * the card PNG to the clipboard first so the post becomes image+text with
+	 * a single paste. Copy before open — the popup steals focus, and a
+	 * blurred document can't write to the clipboard.
+	 */
+	async function postTo(network: 'linkedin' | 'x') {
+		const text = buildSocialText(share)
+		let imgCopied = false
+		if (blob) {
+			try {
+				await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
+				imgCopied = true
+			} catch {
+				// Clipboard unavailable — composer still opens with the text.
+			}
+		}
+		composeHint = imgCopied ? 'card copied — paste it into your post (Ctrl+V)' : ''
+		window.open(
+			network === 'linkedin' ? linkedInComposeUrl(text) : xComposeUrl(text),
+			'_blank',
+			'noopener'
+		)
+	}
 </script>
 
 {#if previewUrl}
@@ -97,5 +131,26 @@
 				{status === 'copied' ? 'Image copied to clipboard' : status === 'saved' ? 'Image downloaded' : ''}
 			</span>
 		</button>
+		<div class="mt-2 grid grid-cols-2 gap-2">
+			<button
+				type="button"
+				onclick={() => postTo('linkedin')}
+				class="glass px-3 py-2.5 font-mono text-xs font-bold tracking-wider text-phish transition hover:border-edge-strong active:translate-y-0.5"
+				style="border-radius: var(--radius-tile)"
+			>
+				[ POST → LINKEDIN ]
+			</button>
+			<button
+				type="button"
+				onclick={() => postTo('x')}
+				class="glass px-3 py-2.5 font-mono text-xs font-bold tracking-wider text-ink-soft transition hover:border-edge-strong active:translate-y-0.5"
+				style="border-radius: var(--radius-tile)"
+			>
+				[ POST → X ]
+			</button>
+		</div>
+		<p aria-live="polite" class="mt-2 min-h-4 text-center font-mono text-[11px] text-amber">
+			{composeHint}
+		</p>
 	</div>
 {/if}
