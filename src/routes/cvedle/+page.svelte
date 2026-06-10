@@ -24,7 +24,7 @@
 		return 'Low'
 	}
 
-	/** Hide the answer's own name(s) if they appear in the description. */
+	// Blank out the answer name(s) where they appear in the description.
 	function redact(text: string, cve: Cve): string {
 		let out = text
 		for (const name of [cve.id, ...cve.aliases]) {
@@ -186,7 +186,7 @@
 				accent: GAME.glow
 			}}
 			stats={game.stats}
-				archive={game.archive}
+			archive={game.archive}
 		>
 			<div class="mb-5 rounded-tile border border-edge bg-inset p-4 text-left">
 				<p class="font-mono text-xs font-bold tracking-wide text-ink-faint uppercase">

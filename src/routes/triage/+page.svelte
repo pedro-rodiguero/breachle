@@ -12,7 +12,7 @@
 	const MAX_MISTAKES = 4
 	const GAME = GAME_BY_ID.triage
 
-	/** Tile ids are 0–15: group = id >> 2, tile = id & 3. */
+	// Tile ids 0-15: group = id >> 2, tile = id & 3.
 	type Progress = { solved: number[]; mistakes: number; history: number[][] }
 	type Result = { won: boolean; mistakes: number; history: number[][] }
 
@@ -26,7 +26,7 @@
 
 	const game = new DailyGame<Progress, Result>('triage', archiveDateFromHash())
 
-	// One PRNG drives both puzzle choice and board shuffle → stable on reload.
+	// One PRNG drives puzzle choice and board shuffle, so it's stable on reload.
 	const rng = dailyRng('triage', game.todayKey)
 	const puzzle = TRIAGE_PUZZLES[Math.floor(rng() * TRIAGE_PUZZLES.length)]
 	const tileOrder = shuffleWith(rng, Array.from({ length: 16 }, (_, i) => i))
@@ -42,7 +42,7 @@
 	let mistakes = $state(saved?.mistakes ?? 0)
 	let history = $state<number[][]>(saved?.history ?? [])
 	let selected = $state<number[]>([])
-	/** Sorted tile-id combos already submitted (session-only duplicate guard). */
+	// Sorted tile-id combos already tried this session (duplicate guard).
 	let attempts = $state<string[]>([])
 	let order = $state(tileOrder)
 	let shaking = $state(false)
@@ -50,8 +50,8 @@
 	let justWon = $state(false)
 	let toastTimer: ReturnType<typeof setTimeout>
 
-	/* Staged end-of-game reveal: banners decrypt one at a time, then the
-	 * result panel drops in. Pages restored in a finished state skip it. */
+	// Staged end-of-game reveal: banners come in one at a time, then the
+	// result panel drops in. A page restored already-finished skips it.
 	let visibleBanners = $state(game.done ? 4 : 0)
 	let showPanel = $state(game.done)
 
@@ -116,7 +116,7 @@
 			if (solved.length === 4) {
 				justWon = true
 				game.complete({ won: true, mistakes, history }, true)
-				// All four already on screen — quick beat, then the panel.
+				// All four already on screen, so just a quick beat then the panel.
 				runReveal(4)
 			} else {
 				game.save({ solved, mistakes, history })
@@ -127,7 +127,7 @@
 			setTimeout(() => (shaking = false), 500)
 			if (mistakes >= MAX_MISTAKES) {
 				game.complete({ won: false, mistakes, history }, false)
-				// Decrypt the unsolved categories one by one.
+				// Reveal the unsolved categories one by one.
 				runReveal(solved.length)
 			} else {
 				if (best === 3) showToast('One away! 😬')
@@ -205,7 +205,7 @@
 						accent: GAME.glow
 					}}
 					stats={game.stats}
-				archive={game.archive}
+					archive={game.archive}
 				/>
 			</div>
 		{/if}

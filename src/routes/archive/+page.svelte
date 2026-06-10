@@ -5,7 +5,7 @@
 	const todayKey = utcDateKey()
 	const todayNum = dayNumber(todayKey)
 
-	/** All puzzle days, newest first. Day 1 = EPOCH_UTC. */
+	// All puzzle days, newest first. Day 1 = EPOCH_UTC.
 	const days = Array.from({ length: todayNum }, (_, i) => {
 		const n = todayNum - i
 		const key = new Date(Date.parse(EPOCH_UTC) + (n - 1) * 86_400_000)

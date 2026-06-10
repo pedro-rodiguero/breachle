@@ -11,7 +11,7 @@
 	const ROUND_SIZE = 5
 	const GAME = GAME_BY_ID.phish
 
-	/** answers[i] = true means the player called item i a phish. */
+	// answers[i] = true means the player called item i a phish.
 	type Progress = { answers: boolean[] }
 	type Result = { answers: boolean[] }
 
@@ -19,7 +19,7 @@
 	const items = dailySample('phish', PHISH_ITEMS, ROUND_SIZE, game.todayKey)
 
 	let answers = $state<boolean[]>(game.result?.answers ?? game.savedProgress?.answers ?? [])
-	/** Index currently shown in its revealed (verdict) state, if any. */
+	// Index currently shown in its revealed (verdict) state, if any.
 	let revealedIdx = $state<number | null>(null)
 	let justWon = $state(false)
 
@@ -30,7 +30,7 @@
 	const gridLine = (ans: boolean[]) =>
 		ans.map((a, i) => (a === items[i].isPhish ? '✅' : '❌')).join('')
 
-	// Refresh-during-final-reveal edge case: all answered but never finalized.
+	// Edge case: refresh after the last answer but before finalizing.
 	// Reading the just-restored initial value here is intentional.
 	// svelte-ignore state_referenced_locally
 	const restored = answers
@@ -152,7 +152,7 @@
 				accent: GAME.glow
 			}}
 			stats={game.stats}
-				archive={game.archive}
+			archive={game.archive}
 		>
 			<div class="mb-5 space-y-2 text-left">
 				{#each items as it, i (i)}
