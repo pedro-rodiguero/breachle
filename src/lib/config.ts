@@ -1,0 +1,76 @@
+/**
+ * Global app configuration. The umbrella brand is a placeholder —
+ * rename the whole site by changing APP_NAME (and SITE_URL when deployed).
+ */
+export const APP_NAME = 'Breachle'
+
+/** Optional canonical URL appended to share texts. Leave '' to omit. */
+export const SITE_URL = ''
+
+/** Day #1 of every puzzle. Earlier dates clamp to day 1. */
+export const EPOCH_UTC = '2026-06-01'
+
+export const STORAGE_PREFIX = 'breachle'
+
+export type GameId = 'cvedle' | 'triage' | 'phish' | 'malware'
+
+export type GameMeta = {
+	id: GameId
+	name: string
+	tagline: string
+	icon: string
+	path: string
+	/** Tailwind classes wired to the per-game accent tokens. */
+	accentBg: string
+	accentText: string
+	/** Raw accent color for `--glow` neon shadows. */
+	glow: string
+}
+
+export const GAMES: GameMeta[] = [
+	{
+		id: 'cvedle',
+		name: 'CVE-dle',
+		tagline: 'Guess the famous vulnerability in 6 tries',
+		icon: '🐞',
+		path: '/cvedle',
+		accentBg: 'bg-cve',
+		accentText: 'text-cve',
+		glow: '#ff3e6b'
+	},
+	{
+		id: 'triage',
+		name: 'Triage',
+		tagline: 'Group 16 alerts into 4 attack types',
+		icon: '🚨',
+		path: '/triage',
+		accentBg: 'bg-triage',
+		accentText: 'text-triage',
+		glow: '#ffb224'
+	},
+	{
+		id: 'phish',
+		name: 'Phish or Legit',
+		tagline: 'Spot the scam before it spots you',
+		icon: '🎣',
+		path: '/phish',
+		accentBg: 'bg-phish',
+		accentText: 'text-phish',
+		glow: '#38d4ff'
+	},
+	{
+		id: 'malware',
+		name: 'Malware or…?',
+		tagline: 'Real malware, or a metal band?',
+		icon: '👾',
+		path: '/malware',
+		accentBg: 'bg-malware',
+		accentText: 'text-malware',
+		glow: '#54f08c'
+	}
+]
+
+export const GAME_BY_ID = Object.fromEntries(GAMES.map((g) => [g.id, g])) as Record<
+	GameId,
+	GameMeta
+>

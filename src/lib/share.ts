@@ -1,4 +1,4 @@
-import { APP_NAME, SITE_URL } from '../config'
+import { APP_NAME, SITE_URL } from './config'
 
 /**
  * Spoiler-free emoji share grids, à la Wordle. Each game supplies its own

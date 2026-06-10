@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="%sveltekit.assets%/favicon.svg" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+		<meta
+			name="description"
+			content="Breachle — daily cybersecurity puzzle games. Guess the vuln, triage the alerts, spot the phish."
+		/>
+		<meta name="theme-color" content="#07090f" />
+		<meta property="og:title" content="Breachle — daily security games" />
+		<meta
+			property="og:description"
+			content="Four daily cybersecurity puzzles: guess the vuln, triage the alerts, spot the phish, name the malware. Same puzzle for everyone, every day."
+		/>
+		<meta property="og:type" content="website" />
+		<meta name="twitter:card" content="summary" />
+		<title>Breachle — daily security games</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;800&display=swap"
+			rel="stylesheet"
+		/>
+		<script>
+			// Apply theme before first paint. Dark is the default; 'light' opts out.
+			;(() => {
+				try {
+					if (localStorage.getItem('breachle.theme') === 'light')
+						document.documentElement.classList.add('light')
+				} catch {}
+			})()
+		</script>
+		%sveltekit.head%
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
+</html>

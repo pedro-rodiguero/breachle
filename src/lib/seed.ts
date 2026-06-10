@@ -1,4 +1,4 @@
-import { EPOCH_UTC, type GameId } from '../config'
+import { EPOCH_UTC, type GameId } from './config'
 
 /**
  * Deterministic daily-puzzle selection. Everything derives from the current

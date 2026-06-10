@@ -1,4 +1,4 @@
-import { STORAGE_PREFIX, type GameId } from '../config'
+import { STORAGE_PREFIX, type GameId } from './config'
 import { utcDateKey } from './seed'
 
 /**
