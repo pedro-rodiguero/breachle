@@ -1,5 +1,6 @@
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { Layout } from './components/Layout'
+import { CveDle } from './games/CveDle'
 import { Hub } from './pages/Hub'
 
 /**
@@ -12,6 +13,7 @@ export default function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<Hub />} />
+          <Route path="/cvedle" element={<CveDle />} />
         </Route>
       </Routes>
     </HashRouter>
