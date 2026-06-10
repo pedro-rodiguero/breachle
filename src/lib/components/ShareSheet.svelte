@@ -9,11 +9,8 @@
 	} from '$lib/share'
 	import { renderShareCard, shareCardFilename } from '$lib/sharecard'
 
-	/**
-	 * Modal share sheet: shows the rendered result card front and center,
-	 * then lets the player pick a destination. The card PNG travels via the
-	 * native share sheet (mobile) or the clipboard (desktop composers).
-	 */
+	// Share modal: shows the result card, then a destination picker. The PNG
+	// rides the native share sheet on mobile or the clipboard on desktop.
 	let { share }: { share: ShareInput } = $props()
 
 	let blob = $state<Blob | null>(null)
@@ -32,7 +29,7 @@
 				previewUrl = URL.createObjectURL(b)
 			})
 			.catch(() => {
-				// No card preview — text sharing still works.
+				// No card preview; text sharing still works.
 			})
 		return () => {
 			stale = true
@@ -63,7 +60,7 @@
 			flash((v) => (saveLabel = v), '[ IMG COPIED ✓ ]', '[ SAVE IMAGE ]')
 			return
 		} catch {
-			// Clipboard unavailable — download instead.
+			// Clipboard blocked; fall back to a download.
 		}
 		const a = document.createElement('a')
 		a.href = previewUrl
@@ -72,12 +69,10 @@
 		flash((v) => (saveLabel = v), '[ SAVED ✓ ]', '[ SAVE IMAGE ]')
 	}
 
-	/**
-	 * Share to a network with the card attached. Mobile: native sheet with
-	 * the PNG + text together. Desktop: copy the PNG, then open the web
-	 * composer with the text preloaded (copy first — the popup steals focus,
-	 * and a blurred document can't write to the clipboard).
-	 */
+	// Share to a network with the card attached. Mobile: native sheet with the
+	// PNG and text. Desktop: copy the PNG, then open the web composer with the
+	// text preloaded. Copy first, because the popup steals focus and a blurred
+	// document can't write to the clipboard.
 	async function postTo(network: 'linkedin' | 'x') {
 		const text = buildSocialText(share)
 
@@ -104,7 +99,7 @@
 			}
 		}
 		hint = imgCopied
-			? 'card copied to clipboard — paste it into your post (Ctrl+V)'
+			? 'card copied to clipboard, paste it into your post (Ctrl+V)'
 			: 'tip: use [ SAVE IMAGE ] and attach the card to your post'
 		window.open(
 			network === 'linkedin' ? linkedInComposeUrl(text) : xComposeUrl(text),

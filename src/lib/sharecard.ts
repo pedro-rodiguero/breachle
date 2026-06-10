@@ -1,11 +1,8 @@
 import { APP_NAME, SITE_URL } from './config'
 import type { ShareInput } from './share'
 
-/**
- * Renders the spoiler-free daily result as a shareable PNG: a terminal-style
- * card with scanlines, corner brackets, the game's icon/accent, and the emoji
- * grid. 1080×1080 — sized for social feeds.
- */
+// Draws the daily result as a 1080x1080 PNG for social feeds: terminal-style
+// card with scanlines, corner brackets, the game's icon/accent and emoji grid.
 
 const W = 1080
 const H = 1080
@@ -71,7 +68,7 @@ export async function renderShareCard(share: ShareInput): Promise<Blob> {
 			document.fonts.load(`400 110px ${DISPLAY}`)
 		])
 	} catch {
-		// Font loading is best-effort; system mono is an acceptable fallback.
+		// Best effort. If the webfont stalls, system mono is fine.
 	}
 
 	const canvas = document.createElement('canvas')
