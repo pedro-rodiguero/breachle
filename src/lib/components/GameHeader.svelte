@@ -14,8 +14,11 @@
 </script>
 
 <div class="mb-5 animate-rise">
+	<p class="mb-1.5 font-mono text-[11px] font-bold tracking-[0.25em] text-ink-faint uppercase">
+		<span class="text-brand">&gt;</span> ./{game.id} --day {String(day).padStart(3, '0')}
+	</p>
 	<div class="flex items-center justify-between gap-3">
-		<h1 class="flex items-center gap-2.5 text-2xl font-bold tracking-tight sm:text-3xl">
+		<h1 class="flex items-center gap-2.5 font-display text-2xl font-bold tracking-tight sm:text-3xl">
 			<span
 				aria-hidden="true"
 				class="glow grid size-11 place-items-center rounded-tile bg-raised text-2xl"
@@ -23,13 +26,12 @@
 			>
 				{game.icon}
 			</span>
-			{game.name}
-			<span class="mt-1 font-mono text-base font-semibold text-ink-faint">#{day}</span>
+			<span style="color: {game.glow}" class="phosphor">{game.name}</span>
 		</h1>
 		<div class="flex items-center gap-2">
 			{#if streak > 0}
 				<span
-					class="rounded-full border border-edge bg-card px-3 py-1.5 text-sm font-bold text-ink-soft"
+					class="glass rounded-tile px-3 py-1.5 font-mono text-sm font-bold text-amber"
 					title="Current streak"
 				>
 					🔥 {streak}
@@ -39,7 +41,7 @@
 				type="button"
 				onclick={() => (showRules = true)}
 				aria-label="How to play"
-				class="grid size-10 place-items-center rounded-full border border-edge bg-card font-mono text-base font-bold text-ink-soft transition hover:border-edge-strong hover:text-ink"
+				class="glass grid size-10 place-items-center rounded-tile font-mono text-base font-bold text-ink-soft transition hover:border-edge-strong hover:text-brand"
 			>
 				?
 			</button>

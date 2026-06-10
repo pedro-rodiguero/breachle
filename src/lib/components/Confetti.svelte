@@ -1,7 +1,7 @@
 <script lang="ts">
 	let { count = 70 }: { count?: number } = $props()
 
-	const COLORS = ['#a78bfa', '#ff3e6b', '#ffb224', '#38d4ff', '#54f08c', '#ffd84d']
+	const COLORS = ['#4dff8f', '#ff4d6d', '#ffb000', '#2fe6c0', '#4dff8f', '#ffe000']
 
 	const pieces = $derived(Array.from({ length: count }, (_, i) => ({
 		left: Math.random() * 100,

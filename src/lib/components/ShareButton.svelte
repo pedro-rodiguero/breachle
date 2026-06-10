@@ -20,7 +20,7 @@
 	type="button"
 	onclick={onCopy}
 	class="glow inline-flex items-center gap-2 rounded-tile bg-brand-deep px-5 py-3 text-base font-bold text-white transition hover:brightness-115 active:translate-y-0.5"
-	style="--glow: #7c5cff"
+	style="--glow: #18e06a"
 >
 	<span aria-hidden="true">{status === 'copied' ? '✅' : '📋'}</span>
 	{status === 'copied' ? 'Copied!' : status === 'failed' ? 'Copy failed' : 'Copy result'}

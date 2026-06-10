@@ -23,31 +23,30 @@
 	<header class="flex items-center justify-between py-4">
 		<a
 			href="#/"
-			class="flex items-center gap-2 font-mono text-xl font-extrabold tracking-tight"
+			class="flex items-baseline gap-1.5 font-mono text-lg font-extrabold tracking-tight sm:text-xl"
 			aria-label="{APP_NAME} home"
 		>
-			<span aria-hidden="true" class="animate-pulse-glow">🛡️</span>
-			<span>
-				{APP_NAME.slice(0, 6)}<span class="text-gradient">{APP_NAME.slice(6)}</span><span
-					aria-hidden="true"
-					class="animate-blink text-brand">_</span
-				>
-			</span>
+			<span aria-hidden="true" class="text-brand phosphor">root@</span><span class="text-gradient"
+				>{APP_NAME.toLowerCase()}</span
+			><span aria-hidden="true" class="text-ink-faint">:~$</span><span
+				aria-hidden="true"
+				class="animate-blink ml-0.5 text-brand phosphor">▮</span
+			>
 		</a>
 		<button
 			type="button"
 			onclick={() => theme.toggle()}
 			aria-label={theme.light ? 'Switch to dark theme' : 'Switch to light theme'}
-			class="glass grid size-10 place-items-center text-lg transition hover:border-edge-strong active:translate-y-0.5"
+			class="glass grid size-10 place-items-center font-mono text-xs font-bold text-ink-soft transition hover:border-edge-strong hover:text-brand active:translate-y-0.5"
 			style="border-radius: var(--radius-tile)"
 		>
-			{theme.light ? '☀️' : '🌙'}
+			{theme.light ? 'LGT' : 'DRK'}
 		</button>
 	</header>
 	<main class="flex-1">
 		{@render children()}
 	</main>
 	<footer class="pt-10 text-center font-mono text-xs text-ink-faint">
-		{APP_NAME} — a daily security game · new puzzles at 00:00 UTC
+		<span class="text-brand">&gt;</span> {APP_NAME.toLowerCase()} — daily security ops · cron: 00:00 UTC
 	</footer>
 </div>

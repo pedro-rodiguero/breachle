@@ -206,7 +206,7 @@
 							type="button"
 							onclick={advance}
 							class="glow mt-4 w-full rounded-tile bg-phish-deep py-3 font-bold text-white transition hover:brightness-115 active:translate-y-0.5"
-							style="--glow: #38d4ff"
+							style="--glow: #2fe6c0"
 						>
 							{answers.length >= items.length ? 'See results' : 'Next →'}
 						</button>
@@ -217,7 +217,7 @@
 							type="button"
 							onclick={() => answer(true)}
 							class="glow rounded-tile bg-cve-deep py-4 text-lg font-bold text-white transition hover:brightness-115 active:translate-y-0.5"
-							style="--glow: #ff3e6b"
+							style="--glow: #ff4d6d"
 						>
 							🎣 Phish
 						</button>
@@ -225,7 +225,7 @@
 							type="button"
 							onclick={() => answer(false)}
 							class="glow rounded-tile bg-malware-deep py-4 text-lg font-bold text-black transition hover:brightness-115 active:translate-y-0.5"
-							style="--glow: #54f08c"
+							style="--glow: #4dff8f"
 						>
 							✅ Legit
 						</button>

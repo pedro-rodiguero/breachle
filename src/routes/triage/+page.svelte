@@ -188,7 +188,7 @@
 						{isSel
 						? 'glow border-brand bg-brand-deep/30 text-ink'
 						: 'border-edge bg-card backdrop-blur-sm hover:border-edge-strong'}"
-					style="--glow: #a78bfa"
+					style="--glow: #4dff8f"
 				>
 					{tileLabel(id)}
 				</button>
@@ -231,7 +231,7 @@
 				onclick={submit}
 				disabled={selected.length !== 4}
 				class="glow flex-1 rounded-tile bg-triage-deep py-3 font-bold text-black transition hover:brightness-115 active:translate-y-0.5 disabled:opacity-40"
-				style="--glow: #ffb224"
+				style="--glow: #ffb000"
 			>
 				Submit
 			</button>

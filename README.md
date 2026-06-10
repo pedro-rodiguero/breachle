@@ -2,7 +2,7 @@
 
 Four daily browser puzzle games with a cybersecurity theme, à la Wordle / Connections / Gamedle. Fully client-side: no backend, no accounts — one puzzle per game per day, identical for every player worldwide, derived deterministically from the UTC date.
 
-> This is the **v2 rebuild** (SvelteKit + Svelte 5, neon cyber-terminal design). The original React implementation lives on `main`.
+> This is the **v2 rebuild** (SvelteKit + Svelte 5, acid-hacker terminal/CRT design — toxic-green phosphor, hard boot-log panels, subtle scanlines, tasteful glitch). The original React implementation lives on `main`.
 
 | Game | What it is |
 | --- | --- |
@@ -42,7 +42,7 @@ npm run check    # svelte-check (types + a11y)
 - **Daily state machine** — [src/lib/daily.svelte.ts](src/lib/daily.svelte.ts): rune-based `DailyGame` class every game shares (restore → save → complete-once → lock).
 - **Share grids** — [src/lib/share.ts](src/lib/share.ts): per-game emoji lines + clipboard with fallback.
 - **Datasets** — [src/lib/data/](src/lib/data/): typed TS modules, human-audited (see [SEED_DATA_AUDIT.md](SEED_DATA_AUDIT.md)); append entries, no code changes needed.
-- **Design system** — [src/app.css](src/app.css): dark-first neon tokens (`.light` opts out), glass panels, per-game `--glow` accents.
+- **Design system** — [src/app.css](src/app.css): dark-first acid-hacker tokens (`.light` opts out), hard terminal panels with corner-bracket framing, CRT scanlines/vignette, phosphor + RGB-split glitch helpers, per-game `--glow` accents.
 - **Rename the brand** by editing `APP_NAME` in [src/lib/config.ts](src/lib/config.ts).
 
 Phish or Legit renders everything as inert sample data — "links" are styled `<span>`s, never anchors, and all phishing domains are fictional.

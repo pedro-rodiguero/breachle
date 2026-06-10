@@ -217,7 +217,7 @@
 					type="submit"
 					disabled={!(suggestions[highlight] ?? matchCve(query))}
 					class="glow shrink-0 rounded-tile bg-cve-deep px-5 font-bold text-white transition hover:brightness-115 active:translate-y-0.5 disabled:opacity-40"
-					style="--glow: #ff3e6b"
+					style="--glow: #ff4d6d"
 				>
 					Guess
 				</button>

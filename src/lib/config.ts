@@ -36,7 +36,7 @@ export const GAMES: GameMeta[] = [
 		path: '/cvedle',
 		accentBg: 'bg-cve',
 		accentText: 'text-cve',
-		glow: '#ff3e6b'
+		glow: '#ff4d6d'
 	},
 	{
 		id: 'triage',
@@ -46,7 +46,7 @@ export const GAMES: GameMeta[] = [
 		path: '/triage',
 		accentBg: 'bg-triage',
 		accentText: 'text-triage',
-		glow: '#ffb224'
+		glow: '#ffb000'
 	},
 	{
 		id: 'phish',
@@ -56,7 +56,7 @@ export const GAMES: GameMeta[] = [
 		path: '/phish',
 		accentBg: 'bg-phish',
 		accentText: 'text-phish',
-		glow: '#38d4ff'
+		glow: '#2fe6c0'
 	},
 	{
 		id: 'malware',
@@ -66,7 +66,7 @@ export const GAMES: GameMeta[] = [
 		path: '/malware',
 		accentBg: 'bg-malware',
 		accentText: 'text-malware',
-		glow: '#54f08c'
+		glow: '#4dff8f'
 	}
 ]
 
