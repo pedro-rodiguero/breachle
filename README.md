@@ -13,6 +13,8 @@ Four daily browser puzzle games with a cybersecurity theme, à la Wordle / Conne
 
 Every game has streaks, refresh-safe in-progress state, a post-game lock with countdown to UTC midnight, and two share modes: a spoiler-free emoji text grid plus a canvas-rendered **share card** PNG (terminal-styled, per-game accent) that goes out via the native share sheet, clipboard, or download.
 
+Beyond the dailies: a **stats page** (`/stats`, per-game + overall: streaks, played, win rate) and a **puzzle archive** (`/archive`) to replay any past drop — archive runs are casual and never touch streaks or stats.
+
 ## Stack
 
 - **SvelteKit 2 + Svelte 5** (runes mode) + TypeScript strict

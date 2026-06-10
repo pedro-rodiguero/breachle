@@ -4,8 +4,8 @@
  */
 export const APP_NAME = 'Breachle'
 
-/** Optional canonical URL appended to share texts. Leave '' to omit. */
-export const SITE_URL = ''
+/** Canonical URL carried by share texts. PLACEHOLDER — update at deploy. */
+export const SITE_URL = 'https://breachle.app'
 
 /** Day #1 of every puzzle. Earlier dates clamp to day 1. */
 export const EPOCH_UTC = '2026-06-01'

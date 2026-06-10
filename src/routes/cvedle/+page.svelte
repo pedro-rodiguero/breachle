@@ -4,7 +4,7 @@
 	import ResultPanel from '$lib/components/ResultPanel.svelte'
 	import { GAME_BY_ID } from '$lib/config'
 	import { CVES, type Cve } from '$lib/data/cves'
-	import { DailyGame } from '$lib/daily.svelte'
+	import { archiveDateFromHash, DailyGame } from '$lib/daily.svelte'
 	import { dailyPick } from '$lib/seed'
 	import { fly } from 'svelte/transition'
 
@@ -14,7 +14,7 @@
 	type Progress = { guesses: string[] }
 	type Result = { won: boolean; guesses: string[] }
 
-	const game = new DailyGame<Progress, Result>('cvedle')
+	const game = new DailyGame<Progress, Result>('cvedle', archiveDateFromHash())
 	const answer = dailyPick('cvedle', CVES, game.todayKey)
 
 	function severityLabel(cvss: number): string {
@@ -127,7 +127,7 @@
 {/if}
 
 <div class="space-y-5">
-	<GameHeader game={GAME} day={game.day} streak={game.stats.streak} {rules} />
+	<GameHeader game={GAME} day={game.day} streak={game.stats.streak} archive={game.archive} {rules} />
 
 	<!-- Clue stack -->
 	<section aria-label="Clues" class="space-y-2.5">
@@ -186,6 +186,7 @@
 				accent: GAME.glow
 			}}
 			stats={game.stats}
+				archive={game.archive}
 		>
 			<div class="mb-5 rounded-tile border border-edge bg-inset p-4 text-left">
 				<p class="font-mono text-xs font-bold tracking-wide text-ink-faint uppercase">

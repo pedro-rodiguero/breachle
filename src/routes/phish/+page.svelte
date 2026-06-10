@@ -4,7 +4,7 @@
 	import ResultPanel from '$lib/components/ResultPanel.svelte'
 	import { GAME_BY_ID } from '$lib/config'
 	import { PHISH_ITEMS, type PhishItem } from '$lib/data/phish'
-	import { DailyGame } from '$lib/daily.svelte'
+	import { archiveDateFromHash, DailyGame } from '$lib/daily.svelte'
 	import { dailySample } from '$lib/seed'
 	import { fly } from 'svelte/transition'
 
@@ -15,7 +15,7 @@
 	type Progress = { answers: boolean[] }
 	type Result = { answers: boolean[] }
 
-	const game = new DailyGame<Progress, Result>('phish')
+	const game = new DailyGame<Progress, Result>('phish', archiveDateFromHash())
 	const items = dailySample('phish', PHISH_ITEMS, ROUND_SIZE, game.todayKey)
 
 	let answers = $state<boolean[]>(game.result?.answers ?? game.savedProgress?.answers ?? [])
@@ -130,7 +130,7 @@
 {/if}
 
 <div class="space-y-4">
-	<GameHeader game={GAME} day={game.day} streak={game.stats.streak} {rules} />
+	<GameHeader game={GAME} day={game.day} streak={game.stats.streak} archive={game.archive} {rules} />
 
 	{#if game.done}
 		{@const finalAnswers = game.result!.answers}
@@ -152,6 +152,7 @@
 				accent: GAME.glow
 			}}
 			stats={game.stats}
+				archive={game.archive}
 		>
 			<div class="mb-5 space-y-2 text-left">
 				{#each items as it, i (i)}

@@ -132,3 +132,8 @@ export function getDisplayStreak(gameId: GameId, todayKey: string = utcDateKey()
     stored.lastCompletedDate === previousDayKey(todayKey)
   return alive ? stored.stats.streak : 0
 }
+
+/** Lifetime stats for one game (stats page). */
+export function getStats(gameId: GameId): GameStats {
+  return readGame(gameId).stats
+}

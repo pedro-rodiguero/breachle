@@ -7,8 +7,9 @@
 		game,
 		day,
 		streak,
-		rules
-	}: { game: GameMeta; day: number; streak: number; rules: Snippet } = $props()
+		rules,
+		archive = false
+	}: { game: GameMeta; day: number; streak: number; rules: Snippet; archive?: boolean } = $props()
 
 	let showRules = $state(false)
 </script>
@@ -16,6 +17,7 @@
 <div class="mb-5 animate-rise">
 	<p class="mb-1.5 font-mono text-[11px] font-bold tracking-[0.25em] text-ink-faint uppercase">
 		<span class="text-brand">&gt;</span> ./{game.id} --day {String(day).padStart(3, '0')}
+		{#if archive}<span class="ml-1 rounded-tile border border-amber/60 bg-amber/10 px-1.5 py-0.5 text-amber">archive</span>{/if}
 	</p>
 	<div class="flex items-center justify-between gap-3">
 		<h1 class="flex items-center gap-2.5 font-display text-3xl font-bold tracking-tight sm:text-4xl">
@@ -29,7 +31,7 @@
 			<span style="color: {game.glow}" class="phosphor">{game.name}</span>
 		</h1>
 		<div class="flex items-center gap-2">
-			{#if streak > 0}
+			{#if streak > 0 && !archive}
 				<span
 					class="glass rounded-tile px-3 py-1.5 font-mono text-sm font-bold text-amber"
 					title="Current streak"

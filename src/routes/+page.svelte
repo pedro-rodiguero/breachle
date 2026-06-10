@@ -78,4 +78,19 @@
 			</a>
 		{/each}
 	</div>
+
+	<div class="animate-rise grid grid-cols-2 gap-3" style="animation-delay: 140ms">
+		<a
+			href="#/archive"
+			class="glass px-4 py-3 text-center font-mono text-sm font-bold tracking-wider text-ink-soft transition hover:border-edge-strong hover:text-brand"
+		>
+			[ ARCHIVE ]
+		</a>
+		<a
+			href="#/stats"
+			class="glass px-4 py-3 text-center font-mono text-sm font-bold tracking-wider text-ink-soft transition hover:border-edge-strong hover:text-brand"
+		>
+			[ STATS ]
+		</a>
+	</div>
 </div>

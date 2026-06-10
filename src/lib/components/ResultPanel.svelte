@@ -12,6 +12,7 @@
 		gridPreview,
 		share,
 		stats,
+		archive = false,
 		children
 	}: {
 		heading: string
@@ -19,6 +20,7 @@
 		gridPreview: string[]
 		share: ShareInput
 		stats: GameStats
+		archive?: boolean
 		children?: Snippet
 	} = $props()
 </script>
@@ -38,22 +40,30 @@
 			<div>{line}</div>
 		{/each}
 	</div>
-	<div class="mb-5 flex justify-center gap-3">
-		{#each [[stats.streak, 'Streak'], [stats.maxStreak, 'Best'], [stats.played, 'Played']] as const as [value, label] (label)}
-			<div class="flex min-w-20 flex-col items-center rounded-tile border border-edge bg-inset px-4 py-2.5">
-				<span class="font-mono text-2xl font-bold text-brand tabular-nums">{value}</span>
-				<span class="font-mono text-[11px] font-semibold tracking-wide text-ink-faint uppercase">
-					{label}
-				</span>
-			</div>
-		{/each}
-	</div>
+	{#if archive}
+		<p class="mb-5 font-mono text-xs font-semibold text-amber">
+			archive run — streaks and stats untouched · <a href="#/archive" class="underline">back to archive</a>
+		</p>
+	{:else}
+		<div class="mb-5 flex justify-center gap-3">
+			{#each [[stats.streak, 'Streak'], [stats.maxStreak, 'Best'], [stats.played, 'Played']] as const as [value, label] (label)}
+				<div class="flex min-w-20 flex-col items-center rounded-tile border border-edge bg-inset px-4 py-2.5">
+					<span class="font-mono text-2xl font-bold text-brand tabular-nums">{value}</span>
+					<span class="font-mono text-[11px] font-semibold tracking-wide text-ink-faint uppercase">
+						{label}
+					</span>
+				</div>
+			{/each}
+		</div>
+	{/if}
 	{#if children}
 		{@render children()}
 	{/if}
 	<ShareCard {share} />
 	<div class="flex flex-col items-center gap-3">
 		<ShareButton {share} />
-		<Countdown />
+		{#if !archive}
+			<Countdown />
+		{/if}
 	</div>
 </section>

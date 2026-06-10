@@ -87,13 +87,30 @@
 	let composeHint = $state('')
 
 	/**
-	 * Open a social composer with the post text preloaded. Best-effort copy
-	 * the card PNG to the clipboard first so the post becomes image+text with
-	 * a single paste. Copy before open — the popup steals focus, and a
-	 * blurred document can't write to the clipboard.
+	 * Share to a social network with the card attached.
+	 *  - Mobile: native share sheet with the PNG + post text together — the
+	 *    user picks LinkedIn/X there and the card rides along as a real file.
+	 *  - Desktop: copy the PNG to the clipboard, then open the network's web
+	 *    composer with the text preloaded — the image is one paste away.
+	 *    (Copy before open: the popup steals focus, and a blurred document
+	 *    can't write to the clipboard.)
 	 */
 	async function postTo(network: 'linkedin' | 'x') {
 		const text = buildSocialText(share)
+
+		if (blob) {
+			const file = new File([blob], shareCardFilename(share), { type: 'image/png' })
+			try {
+				if (navigator.canShare?.({ files: [file] })) {
+					await navigator.share({ files: [file], text })
+					composeHint = ''
+					return
+				}
+			} catch (e) {
+				if ((e as DOMException)?.name === 'AbortError') return // sheet dismissed
+			}
+		}
+
 		let imgCopied = false
 		if (blob) {
 			try {

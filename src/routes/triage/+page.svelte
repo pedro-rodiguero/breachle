@@ -4,7 +4,7 @@
 	import ResultPanel from '$lib/components/ResultPanel.svelte'
 	import { GAME_BY_ID } from '$lib/config'
 	import { TRIAGE_PUZZLES } from '$lib/data/triage'
-	import { DailyGame } from '$lib/daily.svelte'
+	import { archiveDateFromHash, DailyGame } from '$lib/daily.svelte'
 	import { dailyRng, shuffleWith } from '$lib/seed'
 	import { flip } from 'svelte/animate'
 	import { fly, scale } from 'svelte/transition'
@@ -24,7 +24,7 @@
 		4: 'bg-diff-4'
 	}
 
-	const game = new DailyGame<Progress, Result>('triage')
+	const game = new DailyGame<Progress, Result>('triage', archiveDateFromHash())
 
 	// One PRNG drives both puzzle choice and board shuffle → stable on reload.
 	const rng = dailyRng('triage', game.todayKey)
@@ -165,7 +165,7 @@
 {/if}
 
 <div class="space-y-4">
-	<GameHeader game={GAME} day={game.day} streak={game.stats.streak} {rules} />
+	<GameHeader game={GAME} day={game.day} streak={game.stats.streak} archive={game.archive} {rules} />
 
 	{#if solved.length > 0 && !game.done}
 		<div class="space-y-2">
@@ -205,6 +205,7 @@
 						accent: GAME.glow
 					}}
 					stats={game.stats}
+				archive={game.archive}
 				/>
 			</div>
 		{/if}
