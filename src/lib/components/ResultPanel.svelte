@@ -27,7 +27,7 @@
 	<p class="mb-2 font-mono text-[11px] font-bold tracking-[0.25em] text-ink-faint uppercase">
 		<span class="text-brand">&gt;</span> session complete
 	</p>
-	<h2 class="glitch font-display text-2xl font-bold text-brand phosphor" data-text={heading}>
+	<h2 class="glitch font-display text-3xl font-bold text-brand phosphor" data-text={heading}>
 		{heading}
 	</h2>
 	{#if subheading}

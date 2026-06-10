@@ -77,10 +77,11 @@
 	--color-diff-3: #2fe6c0;
 	--color-diff-4: #ff9d3d;
 
-	/* Mono-forward typography for the terminal feel; Space Grotesk for display. */
-	--font-sans: 'JetBrains Mono', ui-monospace, 'Cascadia Code', Menlo, monospace;
-	--font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', Menlo, monospace;
-	--font-display: 'Space Grotesk', system-ui, sans-serif;
+	/* Retro terminal typography: IBM Plex Mono for body (real weights, IBM
+	 * terminal heritage), VT323 for display — the classic DEC CRT face. */
+	--font-sans: 'IBM Plex Mono', ui-monospace, 'Cascadia Code', Menlo, monospace;
+	--font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Code', Menlo, monospace;
+	--font-display: 'VT323', 'IBM Plex Mono', monospace;
 
 	/* Hard edges. */
 	--radius-tile: 2px;

@@ -18,7 +18,7 @@
 		<span class="text-brand">&gt;</span> ./{game.id} --day {String(day).padStart(3, '0')}
 	</p>
 	<div class="flex items-center justify-between gap-3">
-		<h1 class="flex items-center gap-2.5 font-display text-2xl font-bold tracking-tight sm:text-3xl">
+		<h1 class="flex items-center gap-2.5 font-display text-3xl font-bold tracking-tight sm:text-4xl">
 			<span
 				aria-hidden="true"
 				class="glow grid size-11 place-items-center rounded-tile bg-raised text-2xl"

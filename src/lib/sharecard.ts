@@ -9,7 +9,8 @@ import type { ShareInput } from './share'
 
 const W = 1080
 const H = 1080
-const MONO = '"JetBrains Mono", ui-monospace, monospace'
+const MONO = '"IBM Plex Mono", ui-monospace, monospace'
+const DISPLAY = '"VT323", "IBM Plex Mono", monospace'
 
 function scanlines(ctx: CanvasRenderingContext2D) {
 	ctx.fillStyle = 'rgba(0, 0, 0, 0.28)'
@@ -63,11 +64,11 @@ function brackets(ctx: CanvasRenderingContext2D, accent: string) {
 export async function renderShareCard(share: ShareInput): Promise<Blob> {
 	const accent = share.accent ?? '#4dff8f'
 
-	// Make sure the webfont is in before measuring/drawing text.
+	// Make sure the webfonts are in before measuring/drawing text.
 	try {
 		await Promise.all([
 			document.fonts.load(`700 44px ${MONO}`),
-			document.fonts.load(`800 84px ${MONO}`)
+			document.fonts.load(`400 110px ${DISPLAY}`)
 		])
 	} catch {
 		// Font loading is best-effort; system mono is an acceptable fallback.
@@ -105,7 +106,7 @@ export async function renderShareCard(share: ShareInput): Promise<Blob> {
 	ctx.textAlign = 'center'
 	ctx.font = `150px ${MONO}`
 	ctx.fillText(share.icon ?? '🛡️', W / 2, 340)
-	ctx.font = `800 84px ${MONO}`
+	ctx.font = `400 110px ${DISPLAY}`
 	ctx.fillStyle = accent
 	ctx.shadowColor = accent
 	ctx.shadowBlur = 36

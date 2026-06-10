@@ -25,7 +25,7 @@
 	<header class="flex items-center justify-between py-4">
 		<a
 			href="#/"
-			class="flex items-baseline gap-1.5 font-mono text-lg font-extrabold tracking-tight sm:text-xl"
+			class="flex items-baseline gap-1.5 font-display text-2xl font-extrabold tracking-tight sm:text-3xl"
 			aria-label="{APP_NAME} home"
 		>
 			<span aria-hidden="true" class="text-brand phosphor">root@</span><span class="text-gradient"

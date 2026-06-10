@@ -26,7 +26,7 @@
 		<p class="font-mono text-xs font-bold tracking-[0.25em] text-ink-faint uppercase">
 			<span class="text-brand">&gt;</span> booting daily ops<span class="animate-blink">_</span>
 		</p>
-		<h1 class="mt-2 font-display text-3xl font-bold tracking-tight sm:text-4xl">
+		<h1 class="mt-2 font-display text-4xl font-bold tracking-tight sm:text-5xl">
 			today's <span class="glitch text-gradient" data-text="security ops">security ops</span>
 		</h1>
 		<p class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-ink-soft">
