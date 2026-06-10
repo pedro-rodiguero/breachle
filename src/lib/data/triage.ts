@@ -1,12 +1,9 @@
-/**
- * Triage dataset: Connections-style puzzles. Each puzzle has 4 hidden
- * categories (attack types) × 4 tiles (short log artifacts / IOCs / alert
- * snippets). Difficulty 1 = easiest (yellow) … 4 = trickiest (purple).
- *
- * Tiles are deliberately written with red-herring overlaps across groups
- * (e.g. an MFA prompt storm reads like account takeover but is social
- * engineering). Append new puzzles freely.
- */
+// Triage dataset: Connections-style puzzles. 4 hidden categories (attack
+// types), 4 tiles each (short log artifacts / IOCs / alert snippets).
+// Difficulty 1 is easiest (yellow), 4 trickiest (purple).
+//
+// Tiles carry deliberate red-herring overlaps across groups (an MFA prompt
+// storm reads like account takeover but is really social engineering).
 
 export type TriageGroup = {
   category: string

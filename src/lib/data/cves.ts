@@ -1,35 +1,27 @@
-/**
- * CVE-dle dataset. Real, verifiable vulnerabilities only — human-audited
- * against NVD (2026-06-10).
- *
- * Conventions:
- *  - `year` is the public DISCLOSURE year, which may differ from the CVE ID
- *    year (e.g. PwnKit is CVE-2021-4034 but was disclosed in January 2022).
- *  - `cvss` / `cvssVersion` follow the NVD-listed score.
- *  - `sourceUrl` points at the authoritative reference for fact-checking.
- *
- * Append new entries freely — no code changes needed.
- */
+// CVE-dle dataset. Verified against NVD on 2026-06-10.
+// `year` is the disclosure year, which can differ from the CVE id year
+// (PwnKit is CVE-2021-4034 but went public in Jan 2022). cvss/cvssVersion
+// match NVD; sourceUrl is the NVD page. Add entries as needed.
 
 export type Cve = {
-  /** Canonical answer, e.g. "Log4Shell". */
+  // Canonical answer, e.g. "Log4Shell".
   id: string
-  /** Accepted alternate spellings/names. */
+  // Accepted alternate spellings.
   aliases: string[]
   cveId?: string
   cvss: number
-  /** CVSS version the score belongs to, e.g. "3.1". */
+  // CVSS version for the score, e.g. "3.1".
   cvssVersion: string
-  /** Attack vector, e.g. "Network". */
+  // Attack vector, e.g. "Network".
   vector: string
-  /** Year publicly disclosed (see conventions above). */
+  // Year disclosed (see note above).
   year: number
   product: string
-  /** Vulnerability type / CWE family, human-readable. */
+  // CWE family, human-readable.
   cwe: string
-  /** Shown redacted — never include giveaway brand names carelessly. */
+  // Shown with the answer name redacted.
   description: string
-  /** Authoritative reference (NVD) for auditing. */
+  // NVD page, for auditing.
   sourceUrl: string
   logoUrl?: string
 }

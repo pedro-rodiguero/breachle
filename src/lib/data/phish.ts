@@ -1,22 +1,20 @@
-/**
- * Phish or Legit dataset. Every item is inert sample data — links are never
- * real anchors and nothing is clickable. Phishing items imitate the classic
- * patterns (lookalike domains, urgency, mismatched links, BEC); legit items
- * are the boring real thing. Append freely.
- */
+// Phish-or-Legit dataset. Every item is inert sample data: links are never
+// real anchors and nothing is clickable. Phishing items copy the usual
+// patterns (lookalike domains, urgency, mismatched links, BEC); legit items
+// are the boring real thing.
 
 export type PhishItem = {
   kind: 'email' | 'url'
   from?: string
   subject?: string
   body?: string
-  /** Rendered as a fake link inside the email body (never clickable). */
+  // Fake link rendered in the email body. Never clickable.
   link?: { text: string; href: string }
-  /** Small header chip, e.g. an SPF/DKIM result. */
+  // Small header chip, e.g. an SPF/DKIM result.
   headerNote?: string
   displayUrl?: string
   isPhish: boolean
-  /** The tells, shown on reveal. */
+  // Tells, shown on reveal.
   tells: string[]
 }
 
