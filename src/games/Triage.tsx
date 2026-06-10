@@ -43,6 +43,8 @@ export function Triage() {
   const [mistakes, setMistakes] = useState(saved?.mistakes ?? 0)
   const [history, setHistory] = useState<number[][]>(saved?.history ?? [])
   const [selected, setSelected] = useState<number[]>([])
+  /** Sorted tile-id combos already submitted (session-only duplicate guard). */
+  const [attempts, setAttempts] = useState<string[]>([])
   const [order, setOrder] = useState(tileOrder)
   const [shaking, setShaking] = useState(false)
   const [toast, setToast] = useState('')
@@ -68,6 +70,13 @@ export function Triage() {
 
   const submit = () => {
     if (selected.length !== 4 || done) return
+    // Identical combos shouldn't cost a second life.
+    const key = [...selected].sort((a, b) => a - b).join(',')
+    if (attempts.includes(key)) {
+      setToast('Already tried that! 🤔')
+      return
+    }
+    setAttempts([...attempts, key])
     const groupsOf = selected.map((id) => id >> 2)
     const nextHistory = [...history, groupsOf]
     setHistory(nextHistory)

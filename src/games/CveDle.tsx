@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Confetti } from '../components/Confetti'
 import { GameHeader, ResultPanel } from '../components/GameChrome'
 import { GAME_BY_ID } from '../config'
@@ -75,13 +75,16 @@ export function CveDle() {
     ).slice(0, 7)
   }, [query, guesses, done])
 
-  useEffect(() => setHighlight(0), [query])
+  const updateQuery = (q: string) => {
+    setQuery(q)
+    setHighlight(0)
+  }
 
   const submitGuess = (cve: Cve) => {
     if (done || guesses.includes(cve.id)) return
     const next = [...guesses, cve.id]
     setGuesses(next)
-    setQuery('')
+    updateQuery('')
     if (cve.id === answer.id) {
       setJustWon(true)
       game.complete({ won: true, guesses: next }, true)
@@ -225,7 +228,7 @@ export function CveDle() {
               id="cve-guess"
               ref={inputRef}
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => updateQuery(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'ArrowDown') {
                   e.preventDefault()

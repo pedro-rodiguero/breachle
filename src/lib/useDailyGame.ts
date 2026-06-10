@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
+
 import type { GameId } from '../config'
 import { dayNumber, utcDateKey } from './seed'
 import {
@@ -29,7 +30,9 @@ export type DailyGame<P, R> = {
 }
 
 export function useDailyGame<P, R>(gameId: GameId): DailyGame<P, R> {
-  const todayKey = utcDateKey()
+  // Captured once per mount: if UTC midnight passes mid-game, the player
+  // finishes the puzzle they started; the next visit loads the new day.
+  const [todayKey] = useState(() => utcDateKey())
   const initial = useMemo(() => loadToday<P, R>(gameId, todayKey), [gameId, todayKey])
 
   const [stats, setStats] = useState<GameStats>(initial.stats)
