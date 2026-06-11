@@ -60,7 +60,29 @@
 	<main class="flex-1">
 		{@render children()}
 	</main>
-	<footer class="pt-10 text-center font-mono text-xs text-ink-faint">
-		<span class="text-brand">&gt;</span> {APP_NAME.toLowerCase()} — daily security ops · cron: 00:00 UTC
+	<footer class="space-y-1 pt-10 text-center font-mono text-xs text-ink-faint">
+		<p>
+			<span class="text-brand">&gt;</span> {APP_NAME.toLowerCase()} — daily security ops · cron: 00:00 UTC
+		</p>
+		<p>
+			built by
+			<a
+				href="https://pedrorodiguero.netlify.app/"
+				target="_blank"
+				rel="noopener"
+				class="font-bold text-ink-soft underline decoration-edge-strong underline-offset-2 transition hover:text-brand"
+			>
+				pedro rodiguero
+			</a>
+			·
+			<a
+				href="https://github.com/pedro-rodiguero/breachle"
+				target="_blank"
+				rel="noopener"
+				class="font-bold text-ink-soft underline decoration-edge-strong underline-offset-2 transition hover:text-brand"
+			>
+				source
+			</a>
+		</p>
 	</footer>
 </div>
