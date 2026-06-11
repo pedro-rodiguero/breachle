@@ -42,6 +42,14 @@ export function buildSocialText(share: ShareInput): string {
   ].join('\n')
 }
 
+// Title line only, e.g. "Breachle · CVE-dle #011 4/6" — for destinations
+// that take a separate subject (Reddit).
+export function buildShareTitle({ gameName, dayNumber, scoreline }: ShareInput): string {
+  return [`${APP_NAME} · ${gameName} #${String(dayNumber).padStart(3, '0')}`, scoreline]
+    .filter(Boolean)
+    .join(' ')
+}
+
 // LinkedIn web composer with the text preloaded.
 export function linkedInComposeUrl(text: string): string {
   return `https://www.linkedin.com/feed/?shareActive=true&text=${encodeURIComponent(text)}`
@@ -50,6 +58,21 @@ export function linkedInComposeUrl(text: string): string {
 // X post intent with the text preloaded.
 export function xComposeUrl(text: string): string {
   return `https://x.com/intent/post?text=${encodeURIComponent(text)}`
+}
+
+// WhatsApp composer (app or web; recipient picked there).
+export function whatsAppComposeUrl(text: string): string {
+  return `https://wa.me/?text=${encodeURIComponent(text)}`
+}
+
+// Telegram share screen. The url param is required; text rides along.
+export function telegramComposeUrl(text: string): string {
+  return `https://t.me/share/url?url=${encodeURIComponent(SITE_URL || 'https://breachle.app')}&text=${encodeURIComponent(text)}`
+}
+
+// Reddit text-post composer with title + body preloaded.
+export function redditComposeUrl(title: string, text: string): string {
+  return `https://www.reddit.com/submit?title=${encodeURIComponent(title)}&selftext=true&text=${encodeURIComponent(text)}`
 }
 
 // Clipboard write with a hidden-textarea fallback for older mobile browsers.
