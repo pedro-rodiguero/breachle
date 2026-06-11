@@ -48,13 +48,18 @@ export function vendorOf(product: string): string {
 }
 
 const BANDS = [
-	{ min: 9, label: 'Critical', rank: 3 },
-	{ min: 7, label: 'High', rank: 2 },
-	{ min: 4, label: 'Medium', rank: 1 },
-	{ min: 0, label: 'Low', rank: 0 }
+	{ min: 9, label: 'Critical', rank: 3, color: '#ff4d6d' },
+	{ min: 7, label: 'High', rank: 2, color: '#ff9d3d' },
+	{ min: 4, label: 'Medium', rank: 1, color: '#ffe000' },
+	{ min: 0, label: 'Low', rank: 0, color: '#4dff8f' }
 ]
 function band(cvss: number) {
 	return BANDS.find((b) => cvss >= b.min)!
+}
+
+// Severity band for UI chips (suggestion list, etc.).
+export function severityOf(cvss: number): { label: string; color: string } {
+	return band(cvss)
 }
 
 function vectorClass(v: string): 'local' | 'adjacent' | 'network' {
