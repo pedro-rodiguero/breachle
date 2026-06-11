@@ -32,6 +32,20 @@
 				} catch {}
 			})()
 		</script>
+		<style>
+			/* Cursor from the very first paint — the bundled stylesheet arrives
+			   later and would flash the native cursor while loading. Mirrors the
+			   cursor block in app.css. */
+			@media (pointer: fine) {
+				html,
+				body {
+					cursor:
+						url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%23000' stroke-width='3.4' opacity='.55'%3E%3Cpath d='M12 2v6M12 16v6M2 12h6M16 12h6'/%3E%3C/g%3E%3Cg fill='none' stroke='%234dff8f' stroke-width='1.6'%3E%3Cpath d='M12 2v6M12 16v6M2 12h6M16 12h6'/%3E%3C/g%3E%3Ccircle cx='12' cy='12' r='1.7' fill='%234dff8f'/%3E%3C/svg%3E")
+							12 12,
+						default;
+				}
+			}
+		</style>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover" class="crt">
