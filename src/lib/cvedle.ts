@@ -136,3 +136,69 @@ export function compareGuess(guess: CveCore, answer: CveCore): GuessRow {
 		cells: [severity, vector, vendor, year, type]
 	}
 }
+
+// Accumulated intel across all guesses so far: what's confirmed, what's
+// ruled out, and how far the year has been narrowed down.
+export type Intel = {
+	severity: { confirmed?: string; excluded: string[] }
+	vector: { confirmed?: string; excluded: string[] }
+	vendor: { confirmed?: string; excluded: string[] }
+	year: { exact?: number; min?: number; max?: number }
+	type: { confirmed?: string; related: string[]; excluded: string[] }
+}
+
+export function summarize(guesses: CveCore[], answer: CveCore): Intel {
+	const intel: Intel = {
+		severity: { excluded: [] },
+		vector: { excluded: [] },
+		vendor: { excluded: [] },
+		year: {},
+		type: { related: [], excluded: [] }
+	}
+	const sevEx = new Set<string>()
+	const vecEx = new Set<string>()
+	const venEx = new Set<string>()
+	const typEx = new Set<string>()
+	const typRel = new Set<string>()
+	let yMin = -Infinity
+	let yMax = Infinity
+
+	for (const g of guesses) {
+		const [sev, vec, ven, yr, typ] = compareGuess(g, answer).cells
+
+		if (sev.status === 'hit') intel.severity.confirmed = sev.text
+		else sevEx.add(sev.text)
+
+		if (vec.status === 'hit') intel.vector.confirmed = vec.text
+		else {
+			vecEx.add(vec.text)
+			// near = both sides remote, so Local is off the table too.
+			if (vec.status === 'near') vecEx.add('Local')
+		}
+
+		if (ven.status === 'hit') intel.vendor.confirmed = ven.text
+		else venEx.add(ven.text)
+
+		if (yr.status === 'hit') intel.year.exact = g.year
+		else if (yr.arrow === 'up') {
+			yMin = Math.max(yMin, g.year + (yr.status === 'near' ? 1 : 4))
+			if (yr.status === 'near') yMax = Math.min(yMax, g.year + 3)
+		} else if (yr.arrow === 'down') {
+			yMax = Math.min(yMax, g.year - (yr.status === 'near' ? 1 : 4))
+			if (yr.status === 'near') yMin = Math.max(yMin, g.year - 3)
+		}
+
+		if (typ.status === 'hit') intel.type.confirmed = typ.text
+		else if (typ.status === 'near') typRel.add(typ.text)
+		else typEx.add(typ.text)
+	}
+
+	intel.severity.excluded = [...sevEx]
+	intel.vector.excluded = [...vecEx]
+	intel.vendor.excluded = [...venEx]
+	intel.type.related = [...typRel]
+	intel.type.excluded = [...typEx]
+	if (Number.isFinite(yMin)) intel.year.min = yMin
+	if (Number.isFinite(yMax)) intel.year.max = yMax
+	return intel
+}

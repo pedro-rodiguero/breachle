@@ -3,7 +3,7 @@
 	import GameHeader from '$lib/components/GameHeader.svelte'
 	import ResultPanel from '$lib/components/ResultPanel.svelte'
 	import { EPOCH_UTC, GAME_BY_ID } from '$lib/config'
-	import { COLUMNS, compareGuess, severityOf, SHARE_EMOJI, vendorOf, type Cmp } from '$lib/cvedle'
+	import { COLUMNS, compareGuess, severityOf, SHARE_EMOJI, summarize, vendorOf, type Cmp } from '$lib/cvedle'
 	import { CVE_POOL } from '$lib/data/cvepool'
 	import { CVES, type Cve, type CveCore } from '$lib/data/cves'
 	import { afterNavigate } from '$app/navigation'
@@ -61,12 +61,23 @@
 	let inputEl = $state<HTMLInputElement>()
 
 	// Fresh guesses decrypt cell by cell; restored rows render instantly.
+	// +1 column: the CVE id cell reveals after the five scored ones.
 	const REVEAL_STAGGER = 130
-	const REVEAL_HOLD = REVEAL_STAGGER * COLUMNS.length + 480
+	const REVEAL_HOLD = REVEAL_STAGGER * (COLUMNS.length + 1) + 480
 	let revealing = $state(false)
 	let animateLast = $state(false)
 
 	const remaining = $derived(MAX_GUESSES - guesses.length)
+
+	// Accumulated intel, lagging one guess while its row is still decrypting.
+	const intel = $derived.by(() => {
+		const settled = revealing ? guesses.slice(0, -1) : guesses
+		return summarize(
+			settled.map((g) => GUESSABLE.find((c) => c.id === g)!),
+			answer
+		)
+	})
+	const intelReady = $derived((revealing ? guesses.length - 1 : guesses.length) > 0)
 
 	// Keyboard-first: the box is focused on load and after every reveal.
 	// afterNavigate beats the router's own post-navigation focus reset.
@@ -315,6 +326,69 @@
 		</form>
 	{/if}
 
+	<!-- Resumo: what the guesses so far have confirmed or ruled out -->
+	{#if intelReady && (!game.done || revealing)}
+		<div class="glass px-3.5 py-2.5" in:fly={{ y: 8, duration: 250 }}>
+			<p class="mb-2 font-mono text-[10px] font-bold tracking-[0.2em] text-ink-faint uppercase">
+				// analysis
+			</p>
+			<div class="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3 lg:grid-cols-5">
+				{#each [['Severity', intel.severity], ['Vector', intel.vector], ['Vendor', intel.vendor]] as const as [label, info] (label)}
+					<div class="min-w-0">
+						<p class="font-mono text-[9px] font-bold tracking-wide text-ink-faint uppercase">{label}</p>
+						{#if info.confirmed}
+							<p class="truncate font-mono text-xs font-bold text-good" title={info.confirmed}>
+								✓ {info.confirmed}
+							</p>
+						{:else if info.excluded.length}
+							<p class="line-clamp-2 font-mono text-[11px] font-semibold text-bad/80" title={info.excluded.join(', ')}>
+								✗ {info.excluded.join(', ')}
+							</p>
+						{:else}
+							<p class="font-mono text-[11px] text-ink-faint">no intel</p>
+						{/if}
+					</div>
+				{/each}
+				<div class="min-w-0">
+					<p class="font-mono text-[9px] font-bold tracking-wide text-ink-faint uppercase">Year</p>
+					{#if intel.year.exact}
+						<p class="font-mono text-xs font-bold text-good">✓ {intel.year.exact}</p>
+					{:else if intel.year.min !== undefined && intel.year.max !== undefined}
+						<p class="font-mono text-xs font-bold text-warn">{intel.year.min}–{intel.year.max}</p>
+					{:else if intel.year.min !== undefined}
+						<p class="font-mono text-xs font-bold text-warn">≥ {intel.year.min}</p>
+					{:else if intel.year.max !== undefined}
+						<p class="font-mono text-xs font-bold text-warn">≤ {intel.year.max}</p>
+					{:else}
+						<p class="font-mono text-[11px] text-ink-faint">no intel</p>
+					{/if}
+				</div>
+				<div class="min-w-0">
+					<p class="font-mono text-[9px] font-bold tracking-wide text-ink-faint uppercase">Type</p>
+					{#if intel.type.confirmed}
+						<p class="truncate font-mono text-xs font-bold text-good" title={intel.type.confirmed}>
+							✓ {intel.type.confirmed}
+						</p>
+					{:else}
+						{#if intel.type.related.length}
+							<p class="line-clamp-1 font-mono text-[11px] font-semibold text-warn" title={intel.type.related.join(', ')}>
+								≈ {intel.type.related.join(', ')}
+							</p>
+						{/if}
+						{#if intel.type.excluded.length}
+							<p class="line-clamp-1 font-mono text-[11px] font-semibold text-bad/80" title={intel.type.excluded.join(', ')}>
+								✗ {intel.type.excluded.join(', ')}
+							</p>
+						{/if}
+						{#if !intel.type.related.length && !intel.type.excluded.length}
+							<p class="font-mono text-[11px] text-ink-faint">no intel</p>
+						{/if}
+					{/if}
+				</div>
+			</div>
+		</div>
+	{/if}
+
 	<!-- Mission status: attempts, legend, intel — sits under the box like a HUD -->
 	{#if !game.done || revealing}
 		<div class="glass px-3.5 py-2.5">
@@ -386,6 +460,7 @@
 					{#each COLUMNS as col (col)}
 						<div class="w-[4.6rem] shrink-0 text-center sm:w-26 lg:w-32">{col}</div>
 					{/each}
+					<div class="w-[5.4rem] shrink-0 text-center sm:w-28 lg:w-32">CVE ID</div>
 				</div>
 
 				{#each rows as row (row.name)}
@@ -420,6 +495,14 @@
 								{/if}
 							</div>
 						{/each}
+						<!-- Informational, not scored: the guessed vuln's CVE id -->
+						<div
+							class="grid w-[5.4rem] shrink-0 place-items-center rounded-tile border border-edge bg-card px-1 py-1.5 text-center font-mono text-[9px] leading-tight font-semibold text-ink-soft sm:w-28 sm:py-2.5 sm:text-[10px] lg:w-32
+								{row.last && animateLast ? 'animate-cell-reveal' : ''}"
+							style="animation-delay: {row.last && animateLast ? COLUMNS.length * REVEAL_STAGGER : 0}ms"
+						>
+							{row.cveId ?? '—'}
+						</div>
 					</div>
 				{/each}
 			</div>
