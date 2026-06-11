@@ -3,7 +3,7 @@
 	import GameHeader from '$lib/components/GameHeader.svelte'
 	import ResultPanel from '$lib/components/ResultPanel.svelte'
 	import { GAME_BY_ID } from '$lib/config'
-	import { COLUMNS, compareGuess, SHARE_EMOJI, type Cmp } from '$lib/cvedle'
+	import { COLUMNS, compareGuess, severityOf, SHARE_EMOJI, vendorOf, type Cmp } from '$lib/cvedle'
 	import { CVES, type Cve } from '$lib/data/cves'
 	import { archiveDateFromHash, DailyGame } from '$lib/daily.svelte'
 	import { dailyPick } from '$lib/seed'
@@ -41,9 +41,17 @@
 	let shaking = $state(false)
 	let justWon = $state(false)
 
+	// Fresh guesses decrypt cell by cell; restored rows render instantly.
+	const REVEAL_STAGGER = 130
+	const REVEAL_HOLD = REVEAL_STAGGER * COLUMNS.length + 480
+	let revealing = $state(false)
+	let animateLast = $state(false)
+
+	const remaining = $derived(MAX_GUESSES - guesses.length)
+
 	const suggestions = $derived.by(() => {
 		const q = query.trim().toLowerCase()
-		if (!q || game.done) return []
+		if (!q || game.done || revealing) return []
 		return CVES.filter(
 			(c) =>
 				!guesses.includes(c.id) &&
@@ -80,19 +88,24 @@
 	}
 
 	function submitGuess(cve: Cve) {
-		if (game.done || guesses.includes(cve.id)) return
+		if (game.done || revealing || guesses.includes(cve.id)) return
 		guesses = [...guesses, cve.id]
 		updateQuery('')
-		if (cve.id === answer.id) {
-			justWon = true
-			game.complete({ won: true, guesses }, true)
-		} else if (guesses.length >= MAX_GUESSES) {
-			game.complete({ won: false, guesses }, false)
-		} else {
-			game.save({ guesses })
-			shaking = true
-			setTimeout(() => (shaking = false), 500)
-		}
+		animateLast = true
+		revealing = true
+		// Persist immediately; only the celebration waits for the reveal.
+		const won = cve.id === answer.id
+		if (won) game.complete({ won: true, guesses }, true)
+		else if (guesses.length >= MAX_GUESSES) game.complete({ won: false, guesses }, false)
+		else game.save({ guesses })
+		setTimeout(() => {
+			revealing = false
+			if (won) justWon = true
+			else if (!game.done) {
+				shaking = true
+				setTimeout(() => (shaking = false), 500)
+			}
+		}, REVEAL_HOLD)
 	}
 
 	function onSubmit(e: SubmitEvent) {
@@ -130,6 +143,35 @@
 <div class="space-y-5">
 	<GameHeader game={GAME} day={game.day} streak={game.stats.streak} archive={game.archive} {rules} />
 
+	<!-- Integrity meter (attempts left) + color legend -->
+	{#if !game.done || revealing}
+		<div class="glass flex flex-wrap items-center justify-between gap-x-4 gap-y-2 px-3.5 py-2.5">
+			<div class="flex items-center gap-2 font-mono text-[10px] font-bold tracking-widest uppercase">
+				<span class="text-ink-faint">integrity</span>
+				<span
+					class="flex gap-1"
+					role="img"
+					aria-label="{remaining} of {MAX_GUESSES} attempts remaining"
+				>
+					{#each Array(MAX_GUESSES) as _, i (i)}
+						<span
+							class="h-2.5 w-4 rounded-[1px] transition-all duration-700
+								{i < remaining ? 'glow bg-good' : 'border border-bad/50 bg-bad/20'}"
+							style="--glow: #4dff8f"
+						></span>
+					{/each}
+				</span>
+				<span class="text-ink-soft tabular-nums">{remaining}/{MAX_GUESSES}</span>
+			</div>
+			<div class="flex flex-wrap items-center gap-1.5 font-mono text-[9px] font-bold tracking-wide uppercase">
+				<span class="rounded-[1px] bg-good px-1.5 py-0.5 text-black">exact</span>
+				<span class="rounded-[1px] bg-warn px-1.5 py-0.5 text-black">close</span>
+				<span class="rounded-[1px] bg-bad px-1.5 py-0.5 text-white">off</span>
+				<span class="rounded-[1px] border border-edge px-1.5 py-0.5 text-ink-soft">↑ newer · ↓ older</span>
+			</div>
+		</div>
+	{/if}
+
 	{#if guesses.length === 0 && !game.done}
 		<div class="glass bracket p-5 text-center">
 			<p class="font-mono text-sm font-bold text-ink-soft">
@@ -157,6 +199,7 @@
 				{#each rows as row (row.name)}
 					<div
 						class="flex gap-1.5 {row.last && shaking ? 'animate-shake' : ''}"
+						style="perspective: 480px"
 						in:fly={{ y: 10, duration: 250 }}
 					>
 						<div
@@ -168,25 +211,27 @@
 						</div>
 						{#each row.cells as cell, ci (ci)}
 							<div
-								class="grid w-[4.6rem] shrink-0 place-items-center rounded-tile px-1 py-1.5 text-center font-mono text-[10px] leading-tight font-bold {cellClass(
-									cell.status
-								)}"
+								class="grid w-[4.6rem] shrink-0 place-items-center rounded-tile px-1 py-1.5 text-center font-mono text-[10px] leading-tight font-bold
+									{cellClass(cell.status)} {row.last && animateLast ? 'animate-cell-reveal' : ''}"
+								style="animation-delay: {row.last && animateLast ? ci * REVEAL_STAGGER : 0}ms"
 								title={cell.full}
 							>
-								<span class="line-clamp-2 max-w-full">
-									{cell.text}{#if cell.arrow}<span class="ml-0.5"
-											>{cell.arrow === 'up' ? '↑' : '↓'}</span
-										>{/if}
-								</span>
+								{#if cell.arrow}
+									<span class="flex items-center justify-center gap-1">
+										<span>{cell.text}</span>
+										<span aria-hidden="true" class="text-xl leading-none font-bold">
+											{cell.arrow === 'up' ? '↑' : '↓'}
+										</span>
+									</span>
+								{:else}
+									<span class="line-clamp-2 max-w-full">{cell.text}</span>
+								{/if}
 							</div>
 						{/each}
 					</div>
 				{/each}
 			</div>
 		</section>
-		<p class="-mt-2 px-1 font-mono text-[10px] text-ink-faint">
-			🟩 exact · 🟨 close · 🟥 off · ↑/↓ year is higher / lower
-		</p>
 	{/if}
 
 	<!-- Declassified hint once the player is a few guesses in -->
@@ -202,7 +247,7 @@
 		</div>
 	{/if}
 
-	{#if game.done}
+	{#if game.done && !revealing}
 		<ResultPanel
 			heading={game.result!.won ? 'Patched! 🎉' : 'Breach! 💥'}
 			subheading={game.result!.won
@@ -240,9 +285,12 @@
 				<input
 					id="cve-guess"
 					value={query}
+					disabled={revealing}
 					oninput={(e) => updateQuery(e.currentTarget.value)}
 					onkeydown={onKeydown}
-					placeholder="Guess {guesses.length + 1} of {MAX_GUESSES}…"
+					placeholder={revealing
+						? '> cross-referencing attributes…'
+						: `Guess ${Math.min(guesses.length + 1, MAX_GUESSES)} of ${MAX_GUESSES}…`}
 					autocomplete="off"
 					autocapitalize="off"
 					spellcheck="false"
@@ -255,7 +303,7 @@
 				/>
 				<button
 					type="submit"
-					disabled={!(suggestions[highlight] ?? matchCve(query))}
+					disabled={revealing || !(suggestions[highlight] ?? matchCve(query))}
 					class="glow shrink-0 rounded-tile bg-cve-deep px-5 font-bold text-white transition hover:brightness-115 active:translate-y-0.5 disabled:opacity-40"
 					style="--glow: #ff4d6d"
 				>
@@ -276,13 +324,29 @@
 								type="button"
 								onmouseenter={() => (highlight = i)}
 								onclick={() => submitGuess(s)}
-								class="flex w-full items-baseline gap-2 px-4 py-3 text-left font-semibold transition
-									{i === highlight ? 'bg-cve/15 text-cve' : ''}"
+								class="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left transition
+									{i === highlight ? 'bg-cve/15' : ''}"
 							>
-								{s.id}
-								{#if s.cveId}
-									<span class="font-mono text-xs font-medium text-ink-faint">{s.cveId}</span>
-								{/if}
+								<span
+									class="w-10 shrink-0 rounded-[1px] py-0.5 text-center font-mono text-[10px] font-bold text-black"
+									style="background: {severityOf(s.cvss).color}"
+									title="CVSS {s.cvss.toFixed(1)} {severityOf(s.cvss).label}"
+								>
+									{s.cvss.toFixed(1)}
+								</span>
+								<span class="min-w-0">
+									<span class="block truncate font-semibold {i === highlight ? 'text-cve' : 'text-ink'}">
+										{s.id}
+									</span>
+									{#if s.cveId}
+										<span class="block font-mono text-[10px] font-medium text-ink-faint">{s.cveId}</span>
+									{/if}
+								</span>
+								<span
+									class="ml-auto shrink-0 text-right font-mono text-[10px] leading-snug font-semibold text-ink-soft"
+								>
+									{vendorOf(s.product)}<br />{s.year}
+								</span>
 							</button>
 						</li>
 					{/each}
