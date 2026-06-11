@@ -43,12 +43,6 @@ export function dailyRng(gameId: GameId, dateKey: string = utcDateKey()): () => 
   return mulberry32(hashString(`${gameId}:${dateKey}`))
 }
 
-// Pick one entry from a dataset for the day.
-export function dailyPick<T>(gameId: GameId, items: readonly T[], dateKey?: string): T {
-  const rng = dailyRng(gameId, dateKey)
-  return items[Math.floor(rng() * items.length)]
-}
-
 // Fisher-Yates shuffle with a supplied PRNG. Returns a copy.
 export function shuffleWith<T>(rng: () => number, items: readonly T[]): T[] {
   const out = [...items]
@@ -59,14 +53,52 @@ export function shuffleWith<T>(rng: () => number, items: readonly T[]): T[] {
   return out
 }
 
-// Sample n distinct entries for the day.
+// Per-cycle permutation of [0, n). Each cycle reshuffles with a fresh seed;
+// if a reshuffle would start with the previous cycle's last index, the first
+// two slots swap so the same entry never runs two days in a row.
+function cyclePerm(gameId: GameId, n: number, cycle: number): number[] {
+  const indices = () => Array.from({ length: n }, (_, i) => i)
+  const perm = shuffleWith(mulberry32(hashString(`${gameId}:cycle:${cycle}`)), indices())
+  if (cycle > 0 && n > 2) {
+    const prevLast = shuffleWith(
+      mulberry32(hashString(`${gameId}:cycle:${cycle - 1}`)),
+      indices(),
+    )[n - 1]
+    if (perm[0] === prevLast) [perm[0], perm[1]] = [perm[1], perm[0]]
+  }
+  return perm
+}
+
+// No-repeat rotation: day d takes position d % n of its cycle's permutation,
+// so every entry appears exactly once before anything repeats.
+export function dailyIndex(gameId: GameId, poolSize: number, dateKey?: string): number {
+  if (poolSize <= 1) return 0
+  const d = dayNumber(dateKey) - 1
+  return cyclePerm(gameId, poolSize, Math.floor(d / poolSize))[d % poolSize]
+}
+
+// Pick one entry from a dataset for the day (no-repeat rotation).
+export function dailyPick<T>(gameId: GameId, items: readonly T[], dateKey?: string): T {
+  return items[dailyIndex(gameId, items.length, dateKey)]
+}
+
+// Sample n distinct entries for the day. Consecutive days walk disjoint
+// chunks of a per-cycle shuffle, so no entry repeats until the whole pool
+// has been served (leftovers smaller than a chunk carry to the next cycle).
 export function dailySample<T>(
   gameId: GameId,
   items: readonly T[],
   n: number,
   dateKey?: string,
 ): T[] {
-  return shuffleWith(dailyRng(gameId, dateKey), items).slice(0, Math.min(n, items.length))
+  const k = Math.min(n, items.length)
+  if (k <= 0) return []
+  const daysPerCycle = Math.max(1, Math.floor(items.length / k))
+  const d = dayNumber(dateKey) - 1
+  const cycle = Math.floor(d / daysPerCycle)
+  const pos = d % daysPerCycle
+  const perm = shuffleWith(mulberry32(hashString(`${gameId}:cycle:${cycle}`)), items)
+  return perm.slice(pos * k, pos * k + k)
 }
 
 // ms until the next UTC midnight, when the new puzzle drops.
