@@ -11,6 +11,14 @@
 	let panel = $state<HTMLDivElement>()
 	let restoreTo: HTMLElement | null = null
 
+	// Render the overlay under <body>. Ancestors with transforms/filters
+	// (animate-rise, .glass) trap fixed elements in their stacking context,
+	// which painted page panels over the dialog.
+	function portal(node: HTMLElement) {
+		document.body.appendChild(node)
+		return { destroy: () => node.remove() }
+	}
+
 	$effect(() => {
 		if (open) {
 			restoreTo = document.activeElement as HTMLElement | null
@@ -31,6 +39,7 @@
 {#if open}
 	<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
 	<div
+		use:portal
 		class="fixed inset-0 z-40 grid place-items-center bg-black/60 p-4 backdrop-blur-sm"
 		transition:fade={{ duration: 150 }}
 		onclick={() => (open = false)}
