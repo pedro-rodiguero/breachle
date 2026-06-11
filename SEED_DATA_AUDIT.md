@@ -48,6 +48,71 @@ Every entry now carries `cvssVersion` (all "3.1") and `sourceUrl` (NVD detail pa
 
 Also audit each entry's one-line description in `cves.ts` — they're shown (name-redacted) as the final clue and on the answer reveal.
 
+### 1b. Guess pool — `src/lib/data/cvepool.ts` (57 entries) — **NEEDS AUDIT (added 2026-06-11)**
+
+Guess-only entries: they autocomplete and get scored per attribute, but are **never the daily answer** (no descriptions shown). Errors here surface as wrong severity/vector/vendor/year/type cells when someone guesses them. CVSS targets the NVD v3 base score; the two pre-2015 entries (MS08-067, SQL Slammer) use NVD's CVSS v2 since no v3 was retro-assigned. `year` = disclosure year.
+
+| Name | CVE | CVSS | Vector | Year | Check in particular |
+|------|-----|------|--------|------|---------------------|
+| SIGRed | CVE-2020-1350 | 10.0 | Network | 2020 | |
+| CurveBall | CVE-2020-0601 | 8.1 | Network | 2020 | score |
+| SeriousSAM | CVE-2021-36934 | 7.8 | Local | 2021 | |
+| PetitPotam | CVE-2021-36942 | 5.3 | Network | 2021 | score (NVD lists 5.3; ecosystem impact higher) |
+| ProxyNotShell | CVE-2022-41040 | 8.8 | Network | 2022 | |
+| DejaBlue | CVE-2019-1181 | 9.8 | Network | 2019 | |
+| Outlook NTLM Leak | CVE-2023-23397 | 9.8 | Network | 2023 | |
+| MSHTML RCE | CVE-2021-40444 | 8.8 | Local | 2021 | vector (NVD AV; user-interaction delivery) |
+| Equation Editor | CVE-2017-11882 | 7.8 | Local | 2017 | |
+| EternalRomance | CVE-2017-0145 | 8.8 | Network | 2017 | score vs CVE-2017-0144 sibling |
+| MS08-067 | CVE-2008-4250 | 10.0 | Network | 2008 | CVSS v2 (no v3 on NVD) |
+| SQL Slammer | CVE-2002-0649 | 7.5 | Network | 2002 | CVSS v2; vuln disclosed 2002, worm hit 2003 |
+| SACK Panic | CVE-2019-11477 | 7.5 | Network | 2019 | |
+| Sequoia | CVE-2021-33909 | 7.8 | Local | 2021 | |
+| Stack Clash | CVE-2017-1000364 | 7.8 | Local | 2017 | score |
+| Mutagen Astronomy | CVE-2018-14634 | 7.8 | Local | 2018 | score |
+| GameOver(lay) | CVE-2023-2640 | 7.8 | Local | 2023 | |
+| SambaCry | CVE-2017-7494 | 9.8 | Network | 2017 | score |
+| BlueBorne | CVE-2017-1000251 | 8.0 | Adjacent | 2017 | score |
+| glibc getaddrinfo | CVE-2015-7547 | 8.1 | Network | 2016 | |
+| Badlock | CVE-2016-2118 | 7.5 | Network | 2016 | score |
+| runc Escape | CVE-2019-5736 | 8.6 | Local | 2019 | |
+| Kubernetes API Proxy | CVE-2018-1002105 | 9.8 | Network | 2018 | |
+| CCS Injection | CVE-2014-0224 | 7.4 | Network | 2014 | |
+| SpookySSL | CVE-2022-3602 | 7.5 | Network | 2022 | |
+| Terrapin | CVE-2023-48795 | 5.9 | Network | 2023 | |
+| FREAK | CVE-2015-0204 | 3.7 | Network | 2015 | |
+| Logjam | CVE-2015-4000 | 3.7 | Network | 2015 | |
+| Foreshadow | CVE-2018-3615 | 6.4 | Local | 2018 | score |
+| ZombieLoad | CVE-2018-12130 | 6.5 | Local | 2019 | score |
+| Downfall | CVE-2022-40982 | 6.5 | Local | 2023 | |
+| Zenbleed | CVE-2023-20593 | 5.5 | Local | 2023 | |
+| Drupalgeddon2 | CVE-2018-7600 | 9.8 | Network | 2018 | |
+| ImageTragick | CVE-2016-3714 | 8.4 | Network | 2016 | score |
+| Apache Path Traversal | CVE-2021-41773 | 7.5 | Network | 2021 | |
+| Confluence OGNL | CVE-2022-26134 | 9.8 | Network | 2022 | |
+| GitLab ExifTool | CVE-2021-22205 | 10.0 | Network | 2021 | |
+| WebLogic Deserialization | CVE-2019-2725 | 9.8 | Network | 2019 | |
+| ActiveMQ RCE | CVE-2023-46604 | 10.0 | Network | 2023 | |
+| Return of the WIZard | CVE-2019-10149 | 9.8 | Network | 2019 | |
+| BIG-IP iControl | CVE-2022-1388 | 9.8 | Network | 2022 | |
+| BIG-IP TMUI | CVE-2020-5902 | 9.8 | Network | 2020 | |
+| Pulse Secure VPN | CVE-2019-11510 | 10.0 | Network | 2019 | |
+| FortiOS Path Traversal | CVE-2018-13379 | 9.8 | Network | 2019 | score; CVE id 2018, public 2019 |
+| XORtigate | CVE-2023-27997 | 9.8 | Network | 2023 | |
+| Ivanti Command Injection | CVE-2024-21887 | 9.1 | Network | 2024 | |
+| Ivanti EPMM | CVE-2023-35078 | 10.0 | Network | 2023 | |
+| SlashAndGrab | CVE-2024-1709 | 10.0 | Network | 2024 | |
+| Cisco IOS XE Web UI | CVE-2023-20198 | 10.0 | Network | 2023 | |
+| GlobalProtect RCE | CVE-2024-3400 | 10.0 | Network | 2024 | |
+| vCenter Upload RCE | CVE-2021-21972 | 9.8 | Network | 2021 | |
+| Barracuda ESG | CVE-2023-2868 | 9.8 | Network | 2023 | |
+| PaperCut RCE | CVE-2023-27350 | 9.8 | Network | 2023 | |
+| Kaseya VSA | CVE-2021-30116 | 9.8 | Network | 2021 | score (disclosed post-REvil) |
+| WinRAR Spoofing | CVE-2023-38831 | 7.8 | Local | 2023 | |
+| libwebp Overflow | CVE-2023-4863 | 8.8 | Network | 2023 | |
+| FORCEDENTRY | CVE-2021-30860 | 7.8 | Local | 2021 | vector |
+| Flash UAF | CVE-2018-4878 | 9.8 | Network | 2018 | score |
+
 ---
 
 ## 2. Triage — `src/data/triage.ts` (5 puzzles × 16 tiles)
@@ -192,3 +257,4 @@ One judgment call to audit: item 2's body addresses "pedrodev" — a sample user
 - [x] Remix fact rewritten for the Remix 3 no-React reboot
 - [x] Triage red herrings reviewed; puzzle 4 tile swapped for clarity
 - [x] Fictional-domain disclaimer added to the Phish or Legit shell
+- [ ] **NEW (2026-06-11):** guess pool `cvepool.ts` (57 entries) — verify CVSS/vector/year/product against NVD, esp. rows flagged in the "Check in particular" column

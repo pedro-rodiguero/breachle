@@ -3,15 +3,15 @@
 // (PwnKit is CVE-2021-4034 but went public in Jan 2022). cvss/cvssVersion
 // match NVD; sourceUrl is the NVD page. Add entries as needed.
 
-export type Cve = {
-  // Canonical answer, e.g. "Log4Shell".
+// The attributes a guess is scored on. Pool entries (guess-only, see
+// cvepool.ts) carry just these; daily answers carry the full Cve below.
+export type CveCore = {
+  // Canonical name, e.g. "Log4Shell".
   id: string
   // Accepted alternate spellings.
   aliases: string[]
   cveId?: string
   cvss: number
-  // CVSS version for the score, e.g. "3.1".
-  cvssVersion: string
   // Attack vector, e.g. "Network".
   vector: string
   // Year disclosed (see note above).
@@ -19,6 +19,11 @@ export type Cve = {
   product: string
   // CWE family, human-readable.
   cwe: string
+}
+
+export type Cve = CveCore & {
+  // CVSS version for the score, e.g. "3.1".
+  cvssVersion: string
   // Shown with the answer name redacted.
   description: string
   // NVD page, for auditing.

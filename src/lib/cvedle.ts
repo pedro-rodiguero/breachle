@@ -1,4 +1,4 @@
-import type { Cve } from './data/cves'
+import type { CveCore } from './data/cves'
 
 // Gamedle-style guess comparison for CVE-dle. Each guessed CVE is scored
 // against the answer per attribute: hit (exact), near (close), or miss.
@@ -28,18 +28,29 @@ export const SHARE_EMOJI: Record<Cmp, string> = { hit: '🟩', near: '🟨', mis
 // unknown product falls back to its first word.
 const VENDOR_RULES: [RegExp, string][] = [
 	[/openssl/i, 'OpenSSL'],
-	[/openssh/i, 'OpenSSH'],
-	[/microsoft|windows|exchange|netlogon|msdt|spooler/i, 'Microsoft'],
-	[/apache|log4j|tomcat|struts|commons/i, 'Apache'],
+	[/openssh|\bssh\b/i, 'OpenSSH'],
+	[/samba/i, 'Samba'],
+	[/microsoft|windows|exchange|netlogon|msdt|spooler|outlook|office|sql server/i, 'Microsoft'],
+	[/apache|log4j|tomcat|struts|commons|activemq/i, 'Apache'],
 	[/spring/i, 'Spring'],
 	[/citrix|netscaler/i, 'Citrix'],
-	[/android|stagefright/i, 'Google'],
+	[/android|stagefright|chrome|libwebp/i, 'Google'],
 	[/\bgnu\b|glibc|bash/i, 'GNU'],
-	[/linux|polkit|pkexec|sudo|\bxz\b|liblzma/i, 'Linux'],
+	[/linux|polkit|pkexec|sudo|\bxz\b|liblzma|overlayfs/i, 'Linux'],
 	[/intel|amd|\barm\b|cpu/i, 'CPUs'],
-	[/wpa|wi-?fi/i, 'Wi-Fi'],
+	[/wpa|wi-?fi|bluetooth|bluez/i, 'Wireless'],
 	[/ssl|tls/i, 'SSL/TLS'],
-	[/moveit|progress/i, 'Progress']
+	[/moveit|progress/i, 'Progress'],
+	[/fortinet|forti/i, 'Fortinet'],
+	[/ivanti|pulse|mobileiron/i, 'Ivanti'],
+	[/palo alto|pan-os|globalprotect/i, 'Palo Alto'],
+	[/\bf5\b|big-ip/i, 'F5'],
+	[/vmware|vcenter|esxi/i, 'VMware'],
+	[/atlassian|confluence|jira/i, 'Atlassian'],
+	[/cisco/i, 'Cisco'],
+	[/apple|imessage|webkit|icloud/i, 'Apple'],
+	[/adobe|flash/i, 'Adobe'],
+	[/oracle|weblogic/i, 'Oracle']
 ]
 
 export function vendorOf(product: string): string {
@@ -78,7 +89,7 @@ function cmp(hit: boolean, near: boolean): Cmp {
 	return hit ? 'hit' : near ? 'near' : 'miss'
 }
 
-export function compareGuess(guess: Cve, answer: Cve): GuessRow {
+export function compareGuess(guess: CveCore, answer: CveCore): GuessRow {
 	const gb = band(guess.cvss)
 	const ab = band(answer.cvss)
 	const severity: Cell = {
