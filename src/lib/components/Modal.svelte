@@ -11,9 +11,8 @@
 	let panel = $state<HTMLDivElement>()
 	let restoreTo: HTMLElement | null = null
 
-	// Render the overlay under <body>. Ancestors with transforms/filters
-	// (animate-rise, .glass) trap fixed elements in their stacking context,
-	// which painted page panels over the dialog.
+	// Mount the overlay under <body>: ancestors with transforms or filters
+	// (animate-rise, .glass) create stacking contexts that trap fixed elements.
 	function portal(node: HTMLElement) {
 		document.body.appendChild(node)
 		return { destroy: () => node.remove() }

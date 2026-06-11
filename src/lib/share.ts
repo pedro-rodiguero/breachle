@@ -24,7 +24,7 @@ export function buildShareText({ gameName, dayNumber, scoreline, lines }: ShareI
 }
 
 // Longer message for social composers (LinkedIn / X): result, a one-line
-// pitch, the link, and a few hashtags. No spoilers; only the grid travels.
+// pitch, the link, and a few hashtags. No spoilers, just the emoji grid.
 export function buildSocialText(share: ShareInput): string {
   const day = String(share.dayNumber).padStart(3, '0')
   const title = [`${APP_NAME} · ${share.gameName} #${day}`, share.scoreline]
@@ -65,7 +65,7 @@ export function whatsAppComposeUrl(text: string): string {
   return `https://wa.me/?text=${encodeURIComponent(text)}`
 }
 
-// Telegram share screen. The url param is required; text rides along.
+// Telegram share screen. The url param is required; text is appended after it.
 export function telegramComposeUrl(text: string): string {
   return `https://t.me/share/url?url=${encodeURIComponent(SITE_URL || 'https://breachle.app')}&text=${encodeURIComponent(text)}`
 }

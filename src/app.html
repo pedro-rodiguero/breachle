@@ -33,9 +33,8 @@
 			})()
 		</script>
 		<style>
-			/* Cursor from the very first paint — the bundled stylesheet arrives
-			   later and would flash the native cursor while loading. Mirrors the
-			   cursor block in app.css. */
+			/* Inline so the default cursor applies on first paint, before the
+			   bundled stylesheet loads. Keep in sync with app.css. */
 			@media (pointer: fine) {
 				html,
 				body {

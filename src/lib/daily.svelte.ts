@@ -70,7 +70,7 @@ export class DailyGame<P, R> {
 
 	complete(result: R, won: boolean): void {
 		this.result = result
-		// The completion log records archive runs too — only stats are sacred.
+		// Archive runs land in the completion log too; stats stay daily-only.
 		logCompletion(this.gameId, this.todayKey, won)
 		if (this.archive) return
 		this.stats = completeToday(this.gameId, this.todayKey, result, won)

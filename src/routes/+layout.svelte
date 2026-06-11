@@ -7,7 +7,7 @@
 
 	let { children }: { children: Snippet } = $props()
 
-	// Phosphor halo trailing the pointer. Transform-only updates: cheap.
+	// Moves the .cursor-glow halo with the pointer.
 	let glow = $state<HTMLDivElement>()
 	function onPointerMove(e: PointerEvent) {
 		if (!glow || e.pointerType !== 'mouse') return
@@ -32,7 +32,6 @@
 <div aria-hidden="true" class="scanbeam"></div>
 <div bind:this={glow} aria-hidden="true" class="cursor-glow"></div>
 
-<!-- One wide shell everywhere: the games are HUDs, not articles. -->
 <div class="mx-auto flex min-h-dvh w-full max-w-280 flex-col px-4 pb-10">
 	<header class="flex items-center justify-between py-4">
 		<a

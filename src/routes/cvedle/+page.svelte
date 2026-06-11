@@ -79,8 +79,8 @@
 	})
 	const intelReady = $derived((revealing ? guesses.length - 1 : guesses.length) > 0)
 
-	// Keyboard-first: the box is focused on load and after every reveal.
-	// afterNavigate beats the router's own post-navigation focus reset.
+	// Keep the guess box focused: on load, and again after every reveal.
+	// afterNavigate is needed because the router resets focus after navigating.
 	$effect(() => {
 		if (!game.done) inputEl?.focus()
 	})
@@ -132,7 +132,7 @@
 		updateQuery('')
 		animateLast = true
 		revealing = true
-		// Persist immediately; only the celebration waits for the reveal.
+		// Persist right away; confetti/result wait for the reveal.
 		const won = cve.id === answer.id
 		if (won) game.complete({ won: true, guesses }, true)
 		else if (guesses.length >= MAX_GUESSES) game.complete({ won: false, guesses }, false)
@@ -389,7 +389,7 @@
 		</div>
 	{/if}
 
-	<!-- Mission status: attempts, legend, intel — sits under the box like a HUD -->
+	<!-- Status strip: attempts left, color legend, db/intel info -->
 	{#if !game.done || revealing}
 		<div class="glass px-3.5 py-2.5">
 			<div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
