@@ -7,6 +7,14 @@
 
 	let { children }: { children: Snippet } = $props()
 
+	// Phosphor halo trailing the pointer. Transform-only updates: cheap.
+	let glow = $state<HTMLDivElement>()
+	function onPointerMove(e: PointerEvent) {
+		if (!glow || e.pointerType !== 'mouse') return
+		glow.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`
+		glow.classList.add('live')
+	}
+
 	// Cross-fade pages with the View Transitions API where available.
 	onNavigate((navigation) => {
 		if (!document.startViewTransition) return
@@ -19,7 +27,10 @@
 	})
 </script>
 
+<svelte:window onpointermove={onPointerMove} />
+
 <div aria-hidden="true" class="scanbeam"></div>
+<div bind:this={glow} aria-hidden="true" class="cursor-glow"></div>
 
 <!-- One wide shell everywhere: the games are HUDs, not articles. -->
 <div class="mx-auto flex min-h-dvh w-full max-w-280 flex-col px-4 pb-10">
