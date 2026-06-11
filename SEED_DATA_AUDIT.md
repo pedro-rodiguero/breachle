@@ -8,7 +8,7 @@ Sources of truth I'd recommend: NVD (nvd.nist.gov) for CVSS/CWE/years, vendor ad
 
 ---
 
-## 1. CVE-dle — `src/data/cves.ts` (31 entries)
+## 1. CVE-dle — `src/data/cves.ts` (33 entries)
 
 Every entry now carries `cvssVersion` (all "3.1") and `sourceUrl` (NVD detail page). CVSS column is the claim shown to players as the first clue. "Vector" and "Type" are simplified, player-facing labels (not strict CVSS/CWE strings) — judge them for fairness, not formal exactness.
 
@@ -45,6 +45,8 @@ Every entry now carries `cvssVersion` (all "3.1") and `sourceUrl` (NVD detail pa
 | 29 | regreSSHion | CVE-2024-6387 | 8.1 | Network | 2024 | OpenSSH | Signal handler race | Description claims it regressed a 2006 bug (CVE-2006-5051) |
 | 30 | XZ Backdoor | CVE-2024-3094 | 10.0 | Network | 2024 | XZ Utils (liblzma) | Supply-chain backdoor | Description's "500ms slower logins" detail — Andres Freund's account |
 | 31 | Struts RCE | CVE-2017-5638 | 10.0 | Network | 2017 | Apache Struts 2 | Expression language injection | Description ties it to Equifax (147M) — well documented |
+| 32 | Looney Tunables | CVE-2023-4911 | 7.8 | Local | 2023 | GNU glibc (ld.so) | Buffer overflow | |
+| 33 | IngressNightmare | CVE-2025-1974 | 9.8 | Network | 2025 | Kubernetes ingress-nginx | Code injection | **NEW 2026-06-11** — verify CVSS 9.8 + the "~40% of cloud clusters" claim (Wiz figure) vs NVD/advisory |
 
 Also audit each entry's one-line description in `cves.ts` — they're shown (name-redacted) as the final clue and on the answer reveal.
 

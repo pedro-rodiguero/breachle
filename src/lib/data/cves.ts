@@ -482,4 +482,18 @@ export const CVES: Cve[] = [
       'A buffer overflow in the dynamic loader’s GLIBC_TUNABLES environment variable parsing gives local attackers root on major Linux distributions.',
     sourceUrl: nvd('CVE-2023-4911'),
   },
+  {
+    id: 'IngressNightmare',
+    aliases: ['Ingress-NIGHTMARE'],
+    cveId: 'CVE-2025-1974',
+    cvss: 9.8,
+    cvssVersion: '3.1',
+    vector: 'Network',
+    year: 2025,
+    product: 'Kubernetes ingress-nginx controller',
+    cwe: 'Code injection',
+    description:
+      'The admission controller, reachable inside the cluster network, could be fed crafted configuration that executed arbitrary code — exposing secrets across an estimated 40% of cloud clusters.',
+    sourceUrl: nvd('CVE-2025-1974'),
+  },
 ]
