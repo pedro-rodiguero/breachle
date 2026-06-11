@@ -5,7 +5,7 @@
 	import { GAME_BY_ID } from '$lib/config'
 	import { TRIAGE_PUZZLES } from '$lib/data/triage'
 	import { archiveDateFromHash, DailyGame } from '$lib/daily.svelte'
-	import { dailyRng, shuffleWith } from '$lib/seed'
+	import { dailyPick, dailyRng, shuffleWith } from '$lib/seed'
 	import { flip } from 'svelte/animate'
 	import { fly, scale } from 'svelte/transition'
 
@@ -26,10 +26,10 @@
 
 	const game = new DailyGame<Progress, Result>('triage', archiveDateFromHash())
 
-	// One PRNG drives puzzle choice and board shuffle, so it's stable on reload.
-	const rng = dailyRng('triage', game.todayKey)
-	const puzzle = TRIAGE_PUZZLES[Math.floor(rng() * TRIAGE_PUZZLES.length)]
-	const tileOrder = shuffleWith(rng, Array.from({ length: 16 }, (_, i) => i))
+	// Puzzle comes from the no-repeat rotation; the board shuffle stays on
+	// the per-day PRNG so it's stable on reload.
+	const puzzle = dailyPick('triage', TRIAGE_PUZZLES, game.todayKey)
+	const tileOrder = shuffleWith(dailyRng('triage', game.todayKey), Array.from({ length: 16 }, (_, i) => i))
 
 	// A completed game stores only the result; solved groups are the history
 	// rows where all four picks shared a group.
