@@ -133,3 +133,36 @@ export function getDisplayStreak(gameId: GameId, todayKey: string = utcDateKey()
 export function getStats(gameId: GameId): GameStats {
   return readGame(gameId).stats
 }
+
+// ---- Completion log ----
+// One flat record of every finished puzzle (daily AND archive replays),
+// separate from stats: it powers the archive checkmarks and weekly stats.
+
+export type Outcome = 'won' | 'lost'
+export type CompletionLog = Partial<Record<GameId, Record<string, Outcome>>>
+
+const LOG_KEY = `${STORAGE_PREFIX}.done.v1`
+
+export function getCompletionLog(): CompletionLog {
+  try {
+    const raw = localStorage.getItem(LOG_KEY)
+    if (raw) return JSON.parse(raw) as CompletionLog
+  } catch {
+    // Corrupt or missing: start fresh.
+  }
+  return {}
+}
+
+// A win is sticky: replaying a day you already beat can't downgrade it.
+export function logCompletion(gameId: GameId, dateKey: string, won: boolean): void {
+  const log = getCompletionLog()
+  const game = log[gameId] ?? {}
+  if (game[dateKey] === 'won') return
+  game[dateKey] = won ? 'won' : 'lost'
+  log[gameId] = game
+  try {
+    localStorage.setItem(LOG_KEY, JSON.stringify(log))
+  } catch {
+    // Storage full or blocked.
+  }
+}

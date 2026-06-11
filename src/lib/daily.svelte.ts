@@ -1,6 +1,6 @@
 import { EPOCH_UTC, type GameId } from './config'
 import { dayNumber, utcDateKey } from './seed'
-import { completeToday, loadToday, saveProgress, type GameStats } from './storage'
+import { completeToday, loadToday, logCompletion, saveProgress, type GameStats } from './storage'
 
 // Shared per-game state (Svelte 5 runes). Restores today's progress/result on
 // construction, persists on demand, and locks the result in once while rolling
@@ -70,6 +70,8 @@ export class DailyGame<P, R> {
 
 	complete(result: R, won: boolean): void {
 		this.result = result
+		// The completion log records archive runs too — only stats are sacred.
+		logCompletion(this.gameId, this.todayKey, won)
 		if (this.archive) return
 		this.stats = completeToday(this.gameId, this.todayKey, result, won)
 	}
