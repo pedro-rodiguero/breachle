@@ -117,7 +117,7 @@ Guess-only entries: they autocomplete and get scored per attribute, but are **ne
 
 ---
 
-## 2. Triage — `src/data/triage.ts` (5 puzzles × 16 tiles)
+## 2. Triage — `src/data/triage.ts` (35 puzzles × 16 tiles)
 
 These are invented-but-plausible log artifacts, not factual claims. Audit for: (a) every tile genuinely belongs to its category, (b) red herrings are fair (plausibly confusable but defensibly correct), (c) no tile is *equally* valid in two categories.
 
@@ -170,6 +170,45 @@ Factual details worth a check: NTP amplification factor "×556" (commonly cited 
 | Living off the Land (4) | `certutil -urlcache` · `bitsadmin /transfer` · `wmic process create` · `mshta http://…/x.hta` |
 
 Intended red herring: `30 MFA push prompts` (MFA-fatigue is an SE technique even though it smells like ATO). All four LOLBins (`certutil`, `bitsadmin`, `wmic`, `mshta`) are on the LOLBAS list.
+
+### Puzzles 6–35 — batches 3–5 (added 2026-06-12) — **NEEDS AUDIT**
+
+30 puzzles merged after validation: 4 groups × 4 tiles each, difficulties exactly {1,2,3,4}, no duplicate tile or category within a puzzle, no fingerprint match against any other puzzle. New twist vs the original five: explicit **benign** categories (scheduled backups, Patch Tuesday, pentest with ROE, log rotation, cert renewal, monitoring…) — audit that each benign group reads as clearly *not* an incident, and that no malicious tile could be defensibly filed under the benign group of the same puzzle.
+
+| # | Categories (difficulty 1 → 4) |
+|---|---|
+| 6 | Ransomware · Credential Dumping · DNS Tunneling · Scheduled Backup (Benign) |
+| 7 | Vulnerability Scanning · Web Shell Activity · Kerberos Abuse · Cryptomining |
+| 8 | Smishing · Cloud Misconfiguration · Process Injection · Log Tampering |
+| 9 | USB Attack · MFA Attacks · Command & Control · Pentest Activity (Benign) |
+| 10 | SQL Injection · Insider Threat · Pass-the-Hash · DGA Domains |
+| 11 | Phishing Delivery · IoT Botnet · Token Theft · Normal Admin Activity |
+| 12 | Brute Force · Email Spoofing Tells · Data Staging · Container Escape |
+| 13 | Physical Intrusion · PowerShell Abuse · Certificate Anomalies · Supply Chain |
+| 14 | Cross-Site Scripting · Honeypot Telemetry · SIM Swapping · Defense Evasion |
+| 15 | Mobile Malware · Wi-Fi Attacks · Credential Stuffing · Living off the Land |
+| 16 | Lateral Movement · Rootkit Indicators · OAuth Phishing · Routine Patch Tuesday |
+| 17 | Denial of Service · Account Takeover · Printer Exploitation · Legitimate DevOps |
+| 18 | Initial Access via Macro · Exfiltration via Cloud · SSRF · Firewall Rule Change |
+| 19 | Spear Phishing · DNS Hijacking · Steganography · Acceptable-Use Violation (Benign) |
+| 20 | Privilege Escalation · Adversarial ML · Time-Based Evasion · Zero-Day Exploit |
+| 21 | Reconnaissance · Firmware Attack · Cross-Tenant Abuse · Backup System Activity (Benign) |
+| 22 | Ransomware · API Abuse · Watering Hole · BGP Hijacking |
+| 23 | Persistence · Cryptomining · Physical Exfiltration · Adversary-in-the-Middle |
+| 24 | Social Engineering · Memory-Only Malware · Kubernetes Misuse · Legitimate Backup (Benign) |
+| 25 | Credential Phishing · Exfiltration via DNS · Hardware Implant · SIEM Misconfiguration (Benign) |
+| 26 | Business Email Compromise · Active Directory Recon · Bootkit · Scheduled Scan (Benign) |
+| 27 | Exfiltration via Email · Living off the Land · BGP Misconfiguration (Benign) · Kernel Exploit |
+| 28 | Phishing Delivery · Cloud Cryptojacking · LDAP Injection · Patch Deployment (Benign) |
+| 29 | Ransomware · Subdomain Takeover · Malicious Insider (Sabotage) · Developer Workflow (Benign) |
+| 30 | Account Takeover · Reverse Shell · Wi-Fi Deauthentication · Routine Log Rotation (Benign) |
+| 31 | Defense Evasion · Typosquatting Attack · Industrial Control Attack · Security Tool Update (Benign) |
+| 32 | Data Exfiltration · Persistence · Insider Data Theft · Cloud Automation (Benign) |
+| 33 | Spear Phishing · Command & Control · Memory Forensics Indicators · Certificate Renewal (Benign) |
+| 34 | Supply Chain · Exfiltration via ICMP · Social Engineering · Network Maintenance (Benign) |
+| 35 | Web Exploitation · Cryptomining · Email Infrastructure Attack · Legitimate Monitoring (Benign) |
+
+Watch-items spotted during merge: `AS-REP roastable accts` (puzzle 7, Kerberos Abuse) could read as a vuln-scan finding next to that puzzle's Vulnerability Scanning group; `mail forward rule added` (puzzle 16, OAuth Phishing) is also a classic ATO artifact — fine here since no ATO group shares the puzzle; puzzle 26 pairs Defense Evasion at difficulty 1 with a benign Security Tool Update group at 4 — confirm `signed binary sideloaded` vs `CrowdStrike sensor update` stay distinguishable.
 
 ---
 
@@ -260,3 +299,4 @@ One judgment call to audit: item 2's body addresses "pedrodev" — a sample user
 - [x] Triage red herrings reviewed; puzzle 4 tile swapped for clarity
 - [x] Fictional-domain disclaimer added to the Phish or Legit shell
 - [ ] **NEW (2026-06-11):** guess pool `cvepool.ts` (57 entries) — verify CVSS/vector/year/product against NVD, esp. rows flagged in the "Check in particular" column
+- [ ] **NEW (2026-06-12):** Triage puzzles 6–35 — tile-to-category fit + fairness of the benign groups
