@@ -3,25 +3,42 @@
 // the events Worker and prints a terminal summary: plays + win rate per game
 // (today and last 7 days), daily vs archive split, and top countries.
 //
-// Usage:
-//   CLOUDFLARE_API_TOKEN=xxx node scripts/insights.mjs
+// Usage (just run it — it reuses your `wrangler login` session):
+//   npm run insights
 //
-// The token needs only "Account Analytics: Read". Create one at
-//   dash.cloudflare.com → My Profile → API Tokens → Create Token → Custom →
-//   Permissions: Account · Account Analytics · Read.
+// For CI / a headless box, pass a token scoped to "Account Analytics: Read":
+//   CLOUDFLARE_API_TOKEN=xxx npm run insights
+
+import { readFileSync } from 'node:fs'
+import { homedir } from 'node:os'
+import { join } from 'node:path'
 
 const ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID ?? '15b384514770152bbe31297fe40aab17'
-const TOKEN = process.env.CLOUDFLARE_API_TOKEN
 const DATASET = 'breachle_events'
 
+// Prefer an explicit token; otherwise reuse the wrangler OAuth session so there
+// is nothing to set up after `wrangler login`.
+function wranglerToken() {
+  const base = process.env.XDG_CONFIG_HOME || join(homedir(), '.config')
+  try {
+    const toml = readFileSync(join(base, '.wrangler', 'config', 'default.toml'), 'utf8')
+    return toml.match(/^oauth_token\s*=\s*"([^"]+)"/m)?.[1]
+  } catch {
+    return undefined
+  }
+}
+
+const TOKEN = process.env.CLOUDFLARE_API_TOKEN || wranglerToken()
+
 if (!TOKEN) {
-  console.error('Set CLOUDFLARE_API_TOKEN (Account Analytics: Read). See the header of this file.')
+  console.error('No credentials. Run `wrangler login`, or set CLOUDFLARE_API_TOKEN')
+  console.error('(Account Analytics: Read). See the header of this file.')
   process.exit(1)
 }
 
 async function sql(query) {
   const res = await fetch(
-    `https://api.cloudflare.com/client/4/accounts/${ACCOUNT_ID}/analytics_engine/sql`,
+    `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/analytics_engine/sql`,
     { method: 'POST', headers: { Authorization: `Bearer ${TOKEN}` }, body: query }
   )
   const text = await res.text()
