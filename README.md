@@ -1,5 +1,7 @@
 # 🛡️ Breachle v2 — daily security games
 
+### ▶ Play now at [breachle.app](https://breachle.app)
+
 Four daily browser puzzle games with a cybersecurity theme, à la Wordle / Connections / Gamedle. Fully client-side: no backend, no accounts — one puzzle per game per day, identical for every player worldwide, derived deterministically from the UTC date.
 
 > This is the **v2 rebuild** (SvelteKit + Svelte 5, acid-hacker terminal/CRT design — toxic-green phosphor, hard boot-log panels, subtle scanlines, tasteful glitch). The original React implementation lives on `main`.
