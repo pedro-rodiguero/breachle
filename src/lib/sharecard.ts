@@ -117,17 +117,24 @@ export async function renderShareCard(share: ShareInput): Promise<Blob> {
 		ctx.fillText(share.scoreline, W / 2, 575)
 	}
 
-	// Emoji grid (auto-shrinks for tall Triage histories)
+	// Body lines (emoji grid, or the stats rundown). They live in a band that
+	// starts below the scoreline and ends above the footer; a tall card shrinks
+	// to fit and stays centered in the band rather than riding up into the
+	// title/scoreline above it.
 	const lines = share.lines.filter((l) => l.length > 0)
-	const size = lines.length > 5 ? 56 : lines.length > 3 ? 68 : 84
-	const lineHeight = size * 1.22
-	const gridTop = share.scoreline ? 660 : 620
-	const gridHeight = lines.length * lineHeight
-	const start = Math.min(gridTop, H - 150 - gridHeight) + lineHeight / 2
-	ctx.font = `${size}px ${MONO}`
-	lines.forEach((line, i) => {
-		ctx.fillText(line, W / 2, start + i * lineHeight)
-	})
+	if (lines.length > 0) {
+		const bandTop = share.scoreline ? 640 : 600
+		const bandHeight = H - 150 - bandTop
+		const preferred = lines.length > 5 ? 56 : lines.length > 3 ? 68 : 84
+		const lineHeight = Math.min(preferred * 1.22, bandHeight / lines.length)
+		const size = Math.min(preferred, lineHeight / 1.22)
+		const blockHeight = lines.length * lineHeight
+		const start = bandTop + (bandHeight - blockHeight) / 2 + lineHeight / 2
+		ctx.font = `${size}px ${MONO}`
+		lines.forEach((line, i) => {
+			ctx.fillText(line, W / 2, start + i * lineHeight)
+		})
+	}
 
 	// Footer
 	ctx.font = `600 30px ${MONO}`
