@@ -166,3 +166,35 @@ export function logCompletion(gameId: GameId, dateKey: string, won: boolean): vo
     // Storage full or blocked.
   }
 }
+
+// ---- One-time UI flags ----
+// Tiny set of "already shown this" markers — the hub intro banner and the
+// first-play rules hint. Keyed by a free-form string so new hints don't need
+// schema changes.
+
+const SEEN_KEY = `${STORAGE_PREFIX}.seen.v1`
+
+function readSeen(): Record<string, true> {
+  try {
+    const raw = localStorage.getItem(SEEN_KEY)
+    if (raw) return JSON.parse(raw) as Record<string, true>
+  } catch {
+    // Corrupt or missing.
+  }
+  return {}
+}
+
+export function hasSeenOnce(key: string): boolean {
+  return readSeen()[key] === true
+}
+
+export function markSeenOnce(key: string): void {
+  const seen = readSeen()
+  if (seen[key]) return
+  seen[key] = true
+  try {
+    localStorage.setItem(SEEN_KEY, JSON.stringify(seen))
+  } catch {
+    // Storage full or blocked.
+  }
+}
