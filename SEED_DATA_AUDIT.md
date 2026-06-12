@@ -602,6 +602,33 @@ One judgment call to audit: item 2's body addresses "pedrodev" — a sample user
 
 ---
 
+## 5. Warm-up archive — `src/lib/data/warmup.ts` (3 days) — **NEEDS AUDIT (added 2026-06-12)**
+
+Three pre-launch days (2026-06-09 → 06-11) playable from the archive so it isn't empty on day one. Content is exclusive to this file — nothing drawn from the daily pools. Triage runs deliberately easy; the malware deck is the comedy set. Claims to verify:
+
+| Item | Claim to check |
+|------|----------------|
+| VENOM (CVE-2015-3456) | NVD CVSS **7.7 (v2)**; QEMU floppy controller compiled in regardless of config |
+| goto fail (CVE-2014-1266) | NVD CVSS **5.8 (v2)**; duplicated `goto fail;` skipped the TLS signature check |
+| BootHole (CVE-2020-10713) | NVD CVSS **8.2 (v3.1)**; grub.cfg parsing overflow defeats Secure Boot |
+| Brain | 1986 first PC virus; authors' names/address/**two** phone numbers embedded |
+| Anna Kournikova | author turned himself in; **mayor of Sneek job offer** |
+| MEMZ | made for a YouTube series; Nyan Cat bootloader |
+| Michelangelo | March 6 trigger; ~10k actual victims vs millions predicted |
+| Stoned | "Your PC is now Stoned! Legalise Marijuana" wording |
+| CIH | BIOS flash overwrite; author faced no prison time |
+| Cascade / Ping-Pong / Happy99 | falling letters / bouncing dot / fireworks + self-mailing |
+| Hatebeak | parrot vocalist Waldo; never plays live |
+| Okilly Dokilly | "Nedal"; video aired over Simpsons credits |
+| Mac Sabbath / Dethklok | Ronald Osbourne persona; Dethalbum II Billboard #15 (highest-charting death metal at the time) |
+| FARTFULL / JÄTTEBRA / HUVUDROLL | real IKEA names; translations ("speedy" / "really great" / "leading role") |
+| left-pad | 11 lines; 2016 npm unpublish broke React/Babel builds |
+| haveibeenpwned.com (phish day 2) | legit-item claim — Troy Hunt attribution |
+
+Mechanics note: warm-up dates are valid archive keys (`daily.svelte.ts`), render a `--warmup` badge instead of a day number, and the three CVE answers join the CVE-dle guess pool (typeable, never daily answers).
+
+---
+
 ## Quick audit checklist
 
 - [x] All flagged CVSS scores vs NVD — EternalBlue→8.8, GHOST→9.8, rest confirmed
@@ -615,3 +642,4 @@ One judgment call to audit: item 2's body addresses "pedrodev" — a sample user
 - [ ] **NEW (2026-06-12):** Triage puzzles 6–35 — tile-to-category fit + fairness of the benign groups
 - [ ] **NEW (2026-06-12):** Phish items 11–80 — realism + every tell factually correct (esp. flagged rows 12/17/68 by original batch numbering)
 - [ ] **NEW (2026-06-12):** Malware batch 8 (191 entries) — facts + the dual-use cluster judgment calls (Metasploit/XMRig/Cobalt Strike et al.)
+- [ ] **NEW (2026-06-12):** Warm-up archive (section 5) — 3 CVE scores vs NVD + the comedy-deck facts
