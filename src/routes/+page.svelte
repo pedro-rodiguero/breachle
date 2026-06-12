@@ -1,10 +1,20 @@
 <script lang="ts">
 	import { GAMES } from '$lib/config'
 	import { dayNumber, utcDateKey } from '$lib/seed'
-	import { getDisplayStreak, getGameStatus, type GameStatus } from '$lib/storage'
+	import { getDisplayStreak, getGameStatus, hasSeenOnce, markSeenOnce, type GameStatus } from '$lib/storage'
+	import { onMount } from 'svelte'
 
 	const todayKey = utcDateKey()
 	const day = dayNumber(todayKey)
+
+	// First-visit intro. Hidden until mount so a returning player who already
+	// dismissed it never sees a flash of it.
+	let showIntro = $state(false)
+	onMount(() => (showIntro = !hasSeenOnce('intro')))
+	function dismissIntro() {
+		showIntro = false
+		markSeenOnce('intro')
+	}
 
 	const STATUS_LABEL: Record<GameStatus, { text: string; cls: string }> = {
 		new: { text: 'PLAY', cls: 'bg-brand-deep text-black' },
@@ -22,6 +32,35 @@
 </script>
 
 <div class="space-y-5">
+	{#if showIntro}
+		<aside class="glass bracket animate-rise relative px-4 py-3.5 pr-11" aria-label="What is Breachle">
+			<button
+				type="button"
+				onclick={dismissIntro}
+				aria-label="Dismiss intro"
+				class="glow absolute top-2.5 right-2.5 grid size-7 place-items-center rounded-tile font-mono text-sm font-bold text-ink-faint transition hover:bg-raised hover:text-brand"
+			>
+				✕
+			</button>
+			<p class="font-mono text-[11px] font-bold tracking-[0.25em] text-brand uppercase">
+				<span class="text-ink-faint">&gt;</span> man breachle
+			</p>
+			<p class="mt-1.5 text-sm leading-relaxed text-ink-soft">
+				Four bite-size security puzzles — <span class="text-ink">guess the vuln, triage the alerts,
+				spot the phish, call the malware</span>. One fresh set drops every day at 00:00 UTC, the same
+				for everyone. Pick a module below; hit
+				<span class="font-mono font-bold text-ink">?</span> in any game for the rules.
+			</p>
+			<button
+				type="button"
+				onclick={dismissIntro}
+				class="mt-2.5 font-mono text-[11px] font-bold tracking-wider text-brand transition hover:brightness-125"
+			>
+				[ got it → ]
+			</button>
+		</aside>
+	{/if}
+
 	<div class="animate-rise pt-2 pb-1">
 		<p class="font-mono text-xs font-bold tracking-[0.25em] text-ink-faint uppercase">
 			<span class="text-brand">&gt;</span> booting daily ops<span class="animate-blink">_</span>
