@@ -306,7 +306,7 @@ One judgment call to audit: item 2's body addresses "pedrodev" — a sample user
 
 ---
 
-## 4. Malware or…? — `src/data/malware.ts` (42 entries)
+## 4. Malware or…? — `src/data/malware.ts` (233 entries)
 
 ### Real malware (22)
 
@@ -360,6 +360,246 @@ One judgment call to audit: item 2's body addresses "pedrodev" — a sample user
 | 41 | HEMNES | IKEA | solid-pine series, Scandinavian place name | |
 | 42 | SMÅSPORRE | IKEA | duvet | ✓ replaced SKARPSNO |
 
+### Batch 8 — real malware additions (59) — added 2026-06-12, **NEEDS AUDIT**
+
+| # | Name | Type | Fact shown on reveal (clipped) | Flags |
+|---|------|------|-------------------------------|-------|
+| 1 | Conti | ransomware | Operated like a professional company with HR, salaries and performance reviews; its internal chat logs were le… |  |
+| 2 | BlackCat | ransomware | The first major ransomware family written in Rust, making it cross-platform and harder for analysts to reverse… |  |
+| 3 | Maze | ransomware | Pioneered the double-extortion tactic in 2019, threatening to publish stolen data publicly if the ransom was n… |  |
+| 4 | REvil | ransomware | Demanded $70 million in Bitcoin for a universal decryptor after simultaneously infecting up to 1,500 businesse… |  |
+| 5 | Locky | ransomware | Spread primarily through malicious Word macro attachments in 2016 and at its peak was being delivered in 500,0… | "500,000 phishing emails per hour" figure |
+| 6 | Cerber | ransomware | Used a text-to-speech engine to literally read the ransom note aloud to victims — an early example of ransomwa… |  |
+| 7 | Clop | ransomware | Exploited the MOVEit Transfer zero-day over a 2023 Memorial Day weekend, stealing data from over 2,500 organis… | "over 2,500 organisations" — later counts run higher (~2,770) |
+| 8 | Blaster | worm | Contained a hidden message in its code reading "I just want to say LOVE YOU SAN!!" along with an insult direct… |  |
+| 9 | Sasser | worm | Written by an 18-year-old German student in 2004; it crashed computers at Delta Air Lines, forcing the cancell… |  |
+| 10 | Nimda | worm | Used five different propagation methods simultaneously — email, web, network shares, IIS exploits and Code Red… |  |
+| 11 | Morris | worm | Released in 1988 by a Cornell student, it was the first worm to gain widespread attention and led directly to… |  |
+| 12 | DarkComet | RAT | Widely used by the Syrian government to spy on opposition activists during the 2011 civil war; its author even… |  |
+| 13 | njRAT | RAT | Particularly prevalent in the Middle East and North Africa; its Arabic-language builder interface made it acce… |  |
+| 14 | AsyncRAT | RAT | Published as open-source on GitHub in 2019; within a year it had been weaponised by dozens of threat actors, i… |  |
+| 15 | Quasar | RAT | Also originally open-source; it was adopted by APT10 for espionage campaigns targeting managed service provide… |  |
+| 16 | PlugX | RAT | A modular RAT associated with multiple Chinese APT groups; it is often delivered via DLL sideloading alongside… |  |
+| 17 | Remcos | RAT | Sold legally as "remote administration software" on its own website but appears so consistently in cybercrime… |  |
+| 18 | NetWire | RAT | Sold on underground forums for over a decade; its administrator was arrested in Croatia in 2023 following a jo… |  |
+| 19 | BlackShades | RAT | Its 2014 takedown resulted in over 90 arrests across 19 countries in a single coordinated sweep — one of the l… | "over 90 arrests" — reports say ~97 |
+| 20 | Havoc | RAT | An open-source post-exploitation framework released in 2022 that rapidly became popular with both red teams an… | dual-use C2 framework marked malware; deliberate near-pair with the band Havok |
+| 21 | Necurs | botnet | At its peak controlled over 9 million infected computers and was responsible for distributing roughly 90% of t… | "~90% of malware-laden spam" figure |
+| 22 | Kelihos | botnet | Sinkholed three separate times between 2011 and 2017, only to rebuild each time; its suspected operator was fi… |  |
+| 23 | Gameover Zeus | botnet | Used a peer-to-peer architecture with no central C2 server, making it far harder to take down than earlier bot… |  |
+| 24 | RedLine | stealer | Sold for as little as $150 on dark web forums; it became the most widely deployed credential stealer in 2022,… |  |
+| 25 | Raccoon | stealer | Its alleged developer was arrested in the Netherlands in 2022; the malware-as-a-service stole data from over 4… |  |
+| 26 | Vidar | stealer | Uses legitimate social media profiles — including Mastodon and Steam — as dead-drop resolvers to communicate i… |  |
+| 27 | Lumma | stealer | Microsoft and the DOJ disrupted its infrastructure in 2025 by seizing over 2,300 domains, in one of the larges… | 2025 takedown (2,300 domains) — recent claim, verify |
+| 28 | Azorult | stealer | First appeared on Russian-language forums in 2016; it was frequently bundled with ransomware to ensure attacke… |  |
+| 29 | FormBook | stealer | Hooks the Windows GetClipboardData and NtQuerySystemInformation APIs to steal data directly from form fields b… |  |
+| 30 | Cobalt Strike | APT tool | Originally a legitimate red-team platform; cracked versions became so prevalent in ransomware attacks that its… | dual-use red-team tool marked malware — game-frame judgment call |
+| 31 | Mimikatz | APT tool | Created by a French researcher to demonstrate a Windows credential caching flaw he believed Microsoft would ne… | dual-use credential tool marked malware — game-frame judgment call |
+| 32 | Metasploit | APT tool | The most widely used penetration testing framework on the planet; its payloads appear so often in real attacks… | dual-use pentest framework marked malware — weakest of the dual-use cluster, consider cutting |
+| 33 | Turla | APT tool | A Russian APT toolset that once hijacked satellite internet links to route its C2 traffic — using dish receive… | APT *group* name used as a tool name (implants usually called Snake/Uroburos) — verify framing |
+| 34 | Triton | APT tool | Targeted safety instrumented systems at a Saudi petrochemical plant in 2017 — the first malware ever designed… |  |
+| 35 | Industroyer | APT tool | Caused a power blackout in Kyiv in December 2016 by directly speaking industrial control protocols; a successo… |  |
+| 36 | Regin | APT tool | A modular espionage platform used to compromise the Belgian telecoms company Belgacom; its sophistication led… |  |
+| 37 | FinFisher | APT tool | Sold exclusively to governments as a "lawful intercept" tool; leaked files confirmed it was sold to regimes th… |  |
+| 38 | Carbanak | APT tool | Allowed attackers to watch bank employee screens for months, learning procedures well enough to instruct ATMs… |  |
+| 39 | BlackLotus | bootkit | The first publicly known UEFI bootkit capable of bypassing Secure Boot on fully patched Windows 11 systems, pe… |  |
+| 40 | Rustock | rootkit | A spam botnet rootkit that at its 2010 peak was sending 30 billion spam emails per day — roughly half of all g… | "30 billion spam/day" — takedown-era estimates vary widely |
+| 41 | ZeroAccess | rootkit | Infected over 9 million machines and used them for click fraud and Bitcoin mining, generating an estimated $2.… | "$2.7M per month" click-fraud figure |
+| 42 | WannaMine | cryptominer | A fileless cryptominer that spreads using EternalBlue and runs entirely in PowerShell and WMI, leaving no bina… |  |
+| 43 | XMRig | cryptominer | A legitimate open-source Monero miner so frequently bundled into malware campaigns that its presence on a syst… | legitimate OSS miner marked malware — the fact itself explains the nuance |
+| 44 | Lemon Duck | cryptominer | Spreads via phishing, USB, and brute force, then mines Monero while also removing competing cryptominers from… |  |
+| 45 | DarkTequila | spyware | A sophisticated Latin American banking malware active from at least 2013; it only activated on machines connec… |  |
+| 46 | Joker | spyware | An Android spyware family that repeatedly sneaks into the Google Play Store hidden inside seemingly legitimate… |  |
+| 47 | HermeticWiper | wiper | Deployed against Ukrainian organisations hours before Russia's 2022 invasion; it abused a legitimate disk mana… |  |
+| 48 | WhisperGate | wiper | Disguised itself as ransomware by displaying a ransom note, but actually contained no decryption capability —… |  |
+| 49 | Shamoon | wiper | Wiped the master boot records of roughly 35,000 Saudi Aramco workstations in 2012 in under a few hours, replac… | "roughly 35,000 workstations" — 30,000 is the more common figure |
+| 50 | CaddyWiper | wiper | One of at least four separate wiper malware families deployed against Ukraine in 2022; like HermeticWiper it t… |  |
+| 51 | Sunburst | APT tool | Hiding inside a digitally signed SolarWinds Orion update, it gave Russian intelligence access to networks of 1… |  |
+| 52 | Sliver | APT tool | An open-source red team C2 framework in Go; threat actors adopted it rapidly after Cobalt Strike crackdowns, u… | dual-use C2 framework marked malware — game-frame judgment call |
+| 53 | BPFDoor | APT tool | A Linux backdoor that uses the Berkeley Packet Filter to sniff network traffic for a magic packet, opening a s… |  |
+| 54 | Dridex | botnet | A banking trojan turned ransomware dropper; the US Treasury sanctioned its alleged operator — a Russian nation… |  |
+| 55 | IcedID | botnet | Originally a banking trojan, it evolved into a primary loader for ransomware gangs including Conti and REvil,… |  |
+| 56 | Ursnif | botnet | One of the oldest active banking trojans — its lineage traces back to a 2006 source code leak that spawned mor… |  |
+| 57 | AgentTesla | stealer | Marketed as a "keylogger and remote access tool" on its own website; it steals credentials from over 55 applic… | "over 55 applications" figure |
+| 58 | Gootloader | loader | Infects victims via SEO poisoning — poisoning Google search results for legal and financial document templates… | category changed from "APT tool" to "loader" during merge |
+| 59 | GootKit | botnet | A modular banking trojan that evolved into a full loader platform; its SEO-poisoning delivery mechanism became… |  |
+
+### Batch 8 — decoy additions (132) — added 2026-06-12, **NEEDS AUDIT**
+
+| # | Name | Category | Fact (clipped) | Flags |
+|---|------|----------|----------------|-------|
+| 1 | Slayer | metal band | Formed in Huntington Park, California in 1981; their 1986 album Reign in Blood runs exactl… | Reign in Blood runtime "28:58" — verify |
+| 2 | Carcass | metal band | A Liverpool band whose early "goregrind" albums were filled with medical terminology; thei… |  |
+| 3 | Mayhem | metal band | A Norwegian black metal band whose 1990s history includes a member murder, church arsons a… | name collision: obscure 2014 *nix "Mayhem" botnet — kept, band reading dominant |
+| 4 | Obituary | metal band | A Florida death metal pioneer formed in 1984; their vocalist John Tardy is famous for impr… |  |
+| 5 | Sepultura | metal band | A Brazilian thrash and groove metal band from Belo Horizonte; their 1996 album Roots incor… |  |
+| 6 | Exodus | metal band | A Bay Area thrash band formed in 1979 whose early lineup included Kirk Hammett before he l… | name collision: 2019 Italian "Exodus" Android spyware — kept, band far better known |
+| 7 | Napalm Death | metal band | Their 1987 song "You Suffer" lasts one second and holds the Guinness World Record for the… |  |
+| 8 | Coven | metal band | A 1960s occult rock band who used an inverted cross and satanic imagery on their 1969 debu… | horns-gesture origin claim is contested folklore |
+| 9 | Testament | metal band | A Bay Area thrash band whose vocalist Chuck Billy is of Pomo Native American descent; he s… |  |
+| 10 | Bolt Thrower | metal band | A British death metal band from Coventry whose entire discography draws on Warhammer 40,00… |  |
+| 11 | Havok | metal band | A Denver thrash revival band formed in 2004 whose politically charged lyrics and technical… | one letter from the Havoc C2 added in this same batch — deliberate near-pair, confirm intended |
+| 12 | Possessed | metal band | Their 1985 debut Seven Churches is widely credited as the first death metal album ever rec… |  |
+| 13 | Torment | metal band | A Swedish death metal band from the early 1990s Gothenburg scene whose obscure demos are p… |  |
+| 14 | Cryptopsy | metal band | A Montreal brutal death metal band whose 1996 album None So Vile is considered one of the… |  |
+| 15 | Malevolent Creation | metal band | A Florida death metal band formed in 1987 whose 1991 debut The Ten Commandments establishe… |  |
+| 16 | Pestilence | metal band | A Dutch death metal band who incorporated jazz fusion and atonal guitar work into their la… |  |
+| 17 | Goatwhore | metal band | A New Orleans blackened death metal band formed by former members of Acid Bath; their name… | venue-cancellation superlative is unverifiable hyperbole |
+| 18 | Warbringer | metal band | A Ventura County thrash revival band whose 2008 debut was recorded for under $10,000 and l… | "recorded for under $10,000" figure |
+| 19 | Destroyer 666 | metal band | An Australian blackened thrash band formed in Melbourne in 1994 whose confrontational live… |  |
+| 20 | Dying Fetus | metal band | A Maryland brutal death metal band known for combining blast-beat intensity with political… |  |
+| 21 | Kreator | metal band | An Essen thrash metal band formed in 1982; along with Sodom and Destruction they form the… | grammar fixed during merge ("An Essen") |
+| 22 | Unleashed | metal band | A Swedish death metal band formed in 1989 by former Nihilist members; their Viking mytholo… |  |
+| 23 | Revocation | metal band | A Boston technical thrash and death metal band led by guitarist Dave Davidson, who holds a… |  |
+| 24 | Aborted | metal band | A Belgian goregrind and death metal band formed in 1995 whose clinical surgical imagery an… |  |
+| 25 | Vader | metal band | A Polish death metal institution formed in 1983 that managed to rehearse and record throug… |  |
+| 26 | Jungle Rot | metal band | A Wisconsin death metal band whose no-frills, groove-heavy approach has earned them a loya… |  |
+| 27 | Necrophagist | metal band | A German technical death metal band whose guitarist Muhammed Suiçmez recorded the entire d… |  |
+| 28 | Impaled Nazarene | metal band | A Finnish black/thrash band formed in 1990 whose short, brutal songs and provocative image… |  |
+| 29 | Entombed | metal band | Swedish pioneers who defined the Stockholm death metal sound using a Boss HM-2 distortion… |  |
+| 30 | Carnage | metal band | A short-lived Swedish death metal band whose only 1990 album Dark Recollections is conside… |  |
+| 31 | Suffocation | metal band | A New York brutal death metal band credited with inventing the "slam" riff — a breakdown-s… |  |
+| 32 | Nile | metal band | A South Carolina technical death metal band whose lyrics, artwork and song structures are… |  |
+| 33 | Morbid Angel | metal band | A Tampa death metal band whose 1989 debut Altars of Madness is credited as one of the foun… |  |
+| 34 | Darkthrone | metal band | A Norwegian black metal duo who deliberately record in lo-fi on cheap equipment as an ideo… |  |
+| 35 | Hypocrisy | metal band | A Swedish melodic death metal band whose vocalist Peter Tägtgren is a prolific producer wh… |  |
+| 36 | Terrorizer | metal band | A Los Angeles grindcore band whose 1989 debut World Downfall featured future Morbid Angel… |  |
+| 37 | Immolation | metal band | A New York death metal band whose dissonant, doom-influenced approach has remained deliber… |  |
+| 38 | Desecrator | metal band | An Australian thrash metal band whose 2012 debut To the Gallows was recorded in a home stu… |  |
+| 39 | Werewolf | metal band | A Finnish black metal solo project known for raw production and misanthropic lyrics; the p… | BI.ZONE names APT clusters "* Werewolf" — plain name kept |
+| 40 | Witchery | metal band | A Swedish blackened thrash supergroup formed in 1997 featuring members of Mercyful Fate, T… |  |
+| 41 | Impiety | metal band | A Singaporean blackened death metal band formed in 1990 — one of the oldest and most influ… |  |
+| 42 | Exhumed | metal band | A California goregrind and death metal band whose self-described "gore metal" blends Carca… |  |
+| 43 | Cryptic Slaughter | metal band | A Los Angeles crossover thrash band formed in 1984 whose hardcore punk and thrash metal fu… |  |
+| 44 | Pyrexia | metal band | A New York brutal death metal band formed in 1991 whose slam-heavy approach and guttural v… |  |
+| 45 | Centinex | metal band | A Swedish melodic death metal band formed in 1990 whose Gothenburg-influenced sound earned… | "Gothenburg-influenced melodic death" genre claim is shaky (straight Swedish DM from Dalarna) |
+| 46 | Haunter | Pokémon | A Generation I Ghost-type that can pass through walls; its Pokédex entry warns it will try… |  |
+| 47 | Darkrai | Pokémon | A Generation IV Mythical Pokémon that involuntarily causes endless nightmares in anyone wh… |  |
+| 48 | Duskull | Pokémon | A Generation III Ghost-type whose Pokédex entry says it will follow a crying child through… |  |
+| 49 | Spiritomb | Pokémon | A Generation IV Pokémon formed from 108 spirits bound into an Odd Keystone as punishment;… |  |
+| 50 | Hydreigon | Pokémon | A Generation V Dark/Dragon pseudo-legendary whose Pokédex entry describes it as a cruel Po… |  |
+| 51 | Sableye | Pokémon | A Generation III Dark/Ghost Pokémon that had no type weaknesses at all until the Fairy typ… | fact edited during merge to scope the no-weakness claim to pre-Gen VI |
+| 52 | Banette | Pokémon | A Generation III Ghost-type born from a discarded stuffed toy that came to life out of pur… |  |
+| 53 | Misdreavus | Pokémon | A Generation II Ghost-type that sneaks up on people to scare them and feeds on the resulti… |  |
+| 54 | Absol | Pokémon | A Generation III Dark-type that can sense coming disasters; it is often blamed for causing… |  |
+| 55 | Cacturne | Pokémon | A Generation III Grass/Dark Pokémon that follows travelers through deserts at night, waiti… |  |
+| 56 | Seviper | Pokémon | A Generation III Poison-type with a centuries-old rivalry with Zangoose; the two species n… |  |
+| 57 | Crawdaunt | Pokémon | A Generation III Water/Dark Pokémon so violent it drives every other Pokémon out of any po… |  |
+| 58 | Houndoom | Pokémon | A Generation II Dark/Fire Pokémon whose burns never heal; in ancient times people believed… |  |
+| 59 | Weavile | Pokémon | A Generation IV Dark/Ice Pokémon that hunts in packs and communicates by carving cryptic s… |  |
+| 60 | Toxicroak | Pokémon | A Generation IV Poison/Fighting Pokémon that stores toxins collected from prey in its thro… |  |
+| 61 | Drapion | Pokémon | A Generation IV Poison/Dark Pokémon strong enough to crush a car; despite its fearsome app… |  |
+| 62 | Skuntank | Pokémon | A Generation IV Poison/Dark Pokémon that sprays a noxious fluid from its tail tip; the sme… |  |
+| 63 | Croagunk | Pokémon | A Generation IV Poison/Fighting Pokémon whose poison jab is a move it uses even on teammat… |  |
+| 64 | Gengar | Pokémon | One of the original 151 Pokémon; it lurks in cold shadows and Pokédex entries across multi… |  |
+| 65 | Giratina | Pokémon | A Generation IV Ghost/Dragon Legendary banished to the Distortion World for its violent na… |  |
+| 66 | Deoxys | Pokémon | A Generation III Psychic Legendary that originated as a space virus whose DNA mutated upon… |  |
+| 67 | Zoroark | Pokémon | A Generation V Dark-type that can create hyper-realistic illusions of entire landscapes to… |  |
+| 68 | Krookodile | Pokémon | A Generation V Ground/Dark Pokémon known as the "Intimidation Pokémon"; it clamps down on… |  |
+| 69 | Mandibuzz | Pokémon | A Generation V Dark/Flying Pokémon that builds its nest from the bones of its prey; all wi… |  |
+| 70 | Pangoro | Pokémon | A Generation VI Fighting/Dark Pokémon that carries a bamboo stalk in its mouth to track an… |  |
+| 71 | Yveltal | Pokémon | A Generation VI Dark/Flying Legendary that absorbs the life force of all living things whe… |  |
+| 72 | Greninja | Pokémon | A Generation VI Water/Dark Pokémon that creates throwing stars from compressed water; it w… |  |
+| 73 | Noivern | Pokémon | A Generation VI Flying/Dragon Pokémon that flies through the darkest nights guided entirel… |  |
+| 74 | Incineroar | Pokémon | A Generation VII Fire/Dark Pokémon styled after a professional heel wrestler; it deliberat… |  |
+| 75 | Mimikyu | Pokémon | A Generation VII Ghost/Fairy Pokémon so frightening in its true form that a researcher who… |  |
+| 76 | Salazzle | Pokémon | A Generation VII Poison/Fire Pokémon that exudes pheromone-laden gas to reverse-tame male… |  |
+| 77 | Buzzwole | Pokémon | A Generation VII Bug/Fighting Ultra Beast that entered the Pokémon world through an Ultra… |  |
+| 78 | Nihilego | Pokémon | A Generation VII Rock/Poison Ultra Beast that parasitises its host's nervous system, bring… |  |
+| 79 | Grimmsnarl | Pokémon | A Generation VIII Dark/Fairy Pokémon that uses hair wrapped around its body like muscle; i… |  |
+| 80 | Dragapult | Pokémon | A Generation VIII Dragon/Ghost pseudo-legendary that launches the Dreepy living in its hor… |  |
+| 81 | Eternatus | Pokémon | A Generation VIII Poison/Dragon Legendary that arrived on Earth inside a meteorite 20,000… |  |
+| 82 | Spectrier | Pokémon | A Generation VIII Ghost-type Legendary that steals the life force of sleeping creatures; i… |  |
+| 83 | Basculegion | Pokémon | A Generation VIII Water/Ghost Pokémon possessed by the souls of fellow Basculin that peris… |  |
+| 84 | Ceruledge | Pokémon | A Generation IX Fire/Ghost Pokémon clad in ancient armour fragments that absorbed so much… |  |
+| 85 | Bombirdier | Pokémon | A Generation IX Flying/Dark Pokémon that drops things from great heights for reasons even… |  |
+| 86 | Mabosstiff | Pokémon | A Generation IX Dark-type whose bond with its trainer is central to the Pokémon Scarlet an… |  |
+| 87 | Kingambit | Pokémon | A Generation IX Dark/Steel Pokémon that only evolves after defeating other Bisharp who car… |  |
+| 88 | Ursaluna | Pokémon | A Generation VIII Ground/Normal Pokémon that can detect objects buried deep underground us… |  |
+| 89 | Revavroom | Pokémon | A Generation IX Steel/Poison Pokémon that forms a symbiotic relationship with the Team Sta… |  |
+| 90 | Gholdengo | Pokémon | A Generation IX Steel/Ghost Pokémon made of 1,000 coins; it blocks all status moves direct… |  |
+| 91 | Roaring Moon | Pokémon | A Generation IX Dragon/Dark Paradox Pokémon described as an ancient form of Salamence; its… |  |
+| 92 | Iron Moth | Pokémon | A Generation IX Fire/Poison Paradox Pokémon resembling a futuristic Volcarona; it emits ra… |  |
+| 93 | Pecharunt | Pokémon | A Generation IX Poison/Ghost Mythical Pokémon introduced in The Indigo Disk DLC; it contro… | technically debuted in the post-Indigo Disk "Mochi Mayhem" epilogue |
+| 94 | Vite | JS framework | Created by Evan You (the creator of Vue) in 2020; it uses native ES module imports during… |  |
+| 95 | Bun | JS framework | A JavaScript runtime, bundler, test runner and package manager in a single binary written… | "30× faster than npm" early-benchmark claim |
+| 96 | Turbopack | JS framework | Vercel's Rust-based successor to Webpack, announced in 2022 as part of Next.js 13; it uses… |  |
+| 97 | Rollup | JS framework | A module bundler that pioneered "tree shaking" — the process of removing unused code from… |  |
+| 98 | Parcel | JS framework | A zero-configuration bundler that automatically infers build settings from file types, des… |  |
+| 99 | Deno | JS framework | Created by Node.js inventor Ryan Dahl as a direct response to mistakes he acknowledged mak… |  |
+| 100 | Elysia | JS framework | A TypeScript-first web framework built specifically for the Bun runtime; it uses a custom… |  |
+| 101 | Nitro | JS framework | The server engine powering Nuxt 3; it compiles a universal server that can be deployed to… |  |
+| 102 | Solid | JS framework | A reactive UI library that achieves React-like syntax but compiles reactive primitives dir… |  |
+| 103 | Preact | JS framework | A 3KB alternative to React with an identical API; it was adopted by Google for several pro… |  |
+| 104 | Vitest | JS framework | A Vite-native test runner that reuses Vite's transform pipeline to run tests without a sep… |  |
+| 105 | Playwright | JS framework | A Microsoft-developed browser automation library that controls Chromium, Firefox and WebKi… |  |
+| 106 | Turborepo | JS framework | A high-performance monorepo build system that caches task outputs and only reruns tasks wh… |  |
+| 107 | Nx | JS framework | A monorepo tool that uses a computation cache and dependency graph to identify exactly whi… |  |
+| 108 | Pnpm | JS framework | A package manager that stores every version of every package once on disk in a content-add… |  |
+| 109 | Oxc | JS framework | A Rust-based JavaScript toolchain (parser, linter, formatter, transformer) designed to be… |  |
+| 110 | Biome | JS framework | A Rust-based formatter and linter compatible with Prettier and ESLint configs; it formats… |  |
+| 111 | WinterJS | JS framework | A JavaScript runtime built on the SpiderMonkey engine and written in Rust; it targets edge… | requests-per-second superlative is a vendor marketing claim |
+| 112 | Tauri | JS framework | A desktop application framework that uses the OS's native web renderer instead of bundling… |  |
+| 113 | BILLY | IKEA product | Introduced in 1979, BILLY is IKEA's longest-selling bookcase; an estimated one is sold som… |  |
+| 114 | LACK | IKEA product | A minimalist side table whose top is a hollow honeycomb cardboard core between two fibrebo… |  |
+| 115 | BESTÅ | IKEA product | A modular storage system designed around wall mounting; its name comes from the Swedish ve… | renamed from BESTA; dubious "the best" etymology replaced with "to endure" |
+| 116 | IVAR | IKEA product | An untreated solid pine shelving system sold since 1953, making it one of IKEA's oldest co… |  |
+| 117 | KLIPPAN | IKEA product | A two-seat sofa introduced in 1979 whose slip-on covers can be replaced and washed — a des… |  |
+| 118 | FRIHETEN | IKEA product | A corner sofa-bed with a built-in storage chaise; it became one of IKEA's top-selling sofa… |  |
+| 119 | TROFAST | IKEA product | A children's storage system with angled bins designed so that children can easily reach in… |  |
+| 120 | NORDLI | IKEA product | A modular chest of drawers with built-in cable management holes and a top surface designed… |  |
+| 121 | STUVA | IKEA product | A children's storage combination that includes loft bed frames, desks, drawers and wardrob… |  |
+| 122 | PELLO | IKEA product | A low-profile armchair with a removable, washable cover designed to be a compact and affor… |  |
+| 123 | EKTORP | IKEA product | A fully upholstered sofa range with deep seats and removable machine-washable covers; its… |  |
+| 124 | RÅSKOG | IKEA product | A wheeled three-tier utility cart originally designed for the kitchen but widely adopted f… | diacritic restored (was RASKOG) |
+| 125 | DIGNITET | IKEA product | A stainless steel curtain wire system that uses tension rather than a rod, allowing curtai… |  |
+| 126 | SKÅDIS | IKEA product | A pegboard system with interchangeable accessories including shelves, cups and hooks; it w… | diacritic restored (was SKADIS) |
+| 127 | MITTZON | IKEA product | A 2024 office furniture range designed to replace the BEKANT series; it includes sit-stand… | 2024 BEKANT-successor claim — verify |
+| 128 | DUKTIG | IKEA product | A children's play kitchen made from solid birch that is scaled to child height; it has bee… | unverifiable "since 1987" softened to "for decades" |
+| 129 | ALGOT | IKEA product | A wall-mounted storage system using a single bracket rail from which shelves, rods and bas… |  |
+| 130 | BRIMNES | IKEA product | A bedroom range that includes a wardrobe with frosted glass doors and a headboard with bui… |  |
+| 131 | KVISTBRO | IKEA product | A storage table with a hollow top accessed by lifting the tabletop lid; the interior is si… |  |
+| 132 | FLISAT | IKEA product | A children's table with a built-in tilting tabletop that adjusts to different angles for d… |  |
+
+### Batch 8 — rejected (34)
+
+| Name | Reason |
+|------|--------|
+| WannaCry | already in malware.ts |
+| NotPetya | already in malware.ts |
+| Ryuk | already in malware.ts |
+| LockBit | already in malware.ts |
+| DarkSide | already in malware.ts |
+| Stuxnet | already in malware.ts |
+| Conficker | already in malware.ts |
+| Mydoom | already in malware.ts |
+| Slammer | already in malware.ts |
+| CodeRed | already in malware.ts |
+| ILOVEYOU | already in malware.ts |
+| Gh0st | already in malware.ts |
+| Mirai | already in malware.ts |
+| Zeus | already in malware.ts |
+| Emotet | already in malware.ts |
+| TrickBot | already in malware.ts |
+| Qakbot | already in malware.ts |
+| Flame | already in malware.ts |
+| GrayKey | law-enforcement forensic hardware, not malware — "threat intel flagged GrayKey" makes no sense |
+| Pegasus | already in malware.ts |
+| Necromancer | cannot verify a notable Linux rootkit by this name — likely fabricated |
+| Grayware | a detection *category*, not a malware family — the reveal would assert a falsehood |
+| Mastodon | already in malware.ts |
+| Venom | fair-play conflict: VenomRAT + the VENOM vuln (CVE-2015-3456) make "malware" a defensible answer |
+| Warzone | fair-play conflict: Warzone RAT (AveMaria) is a major commodity malware family |
+| KALLAX | already in malware.ts |
+| MALM | already in malware.ts |
+| POÄNG | already in malware.ts |
+| HEMNES | already in malware.ts |
+| Svelte | already in malware.ts |
+| Astro | already in malware.ts |
+| Remix | already in malware.ts |
+| Qwik | already in malware.ts |
+| Hono | already in malware.ts |
+
 ---
 
 ## Quick audit checklist
@@ -374,3 +614,4 @@ One judgment call to audit: item 2's body addresses "pedrodev" — a sample user
 - [ ] **NEW (2026-06-11):** guess pool `cvepool.ts` (57 entries) — verify CVSS/vector/year/product against NVD, esp. rows flagged in the "Check in particular" column
 - [ ] **NEW (2026-06-12):** Triage puzzles 6–35 — tile-to-category fit + fairness of the benign groups
 - [ ] **NEW (2026-06-12):** Phish items 11–80 — realism + every tell factually correct (esp. flagged rows 12/17/68 by original batch numbering)
+- [ ] **NEW (2026-06-12):** Malware batch 8 (191 entries) — facts + the dual-use cluster judgment calls (Metasploit/XMRig/Cobalt Strike et al.)
