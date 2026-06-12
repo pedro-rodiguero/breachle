@@ -212,7 +212,7 @@ Watch-items spotted during merge: `AS-REP roastable accts` (puzzle 7, Kerberos A
 
 ---
 
-## 3. Phish or Legit — `src/data/phish.ts` (10 items)
+## 3. Phish or Legit — `src/data/phish.ts` (80 items)
 
 All invented sample data (rendered inert in the UI — no real links). Audit for: realism, the correctness of each "tell", and that no legit item contains an actually-bad pattern (or vice versa).
 
@@ -228,8 +228,81 @@ All invented sample data (rendered inert in the UI — no real links). Audit for
 | 8 | email | "DocuSign" document from `dse@docusgn-mail.com`, **SPF fail** chip, generic body, 24h expiry | **PHISH** | misspelled domain (missing "i"); SPF fail; no document context; artificial expiry |
 | 9 | url | `https://www.cloudflare.com/learning/` | **LEGIT** | real cloudflare.com; educational path; no credential bait |
 | 10 | email | "Netflix" payment-declined from `info@netflix-billingupdate.com` with billing link on same junk domain | **PHISH** | bolted-words domain; payment pressure; real services let you log in directly |
+| 11 | email | "Your NDA is ready for signature" from `docusign.net` | **LEGIT** | Real docusign.net sender domain |
+| 12 | email | "Action required: your VPN certificate expires tonight" from `corp-helpdesk.net` | **PHISH** | corp-helpdesk.net is not a corporate domain — lookalike registered externally |
+| 13 | url | `https://www.linkedin.com/in/yourprofile` | **LEGIT** | Correct linkedin.com domain |
+| 14 | email | "Direct deposit change confirmation needed" from `payr0ll-update.com` | **PHISH** | payr0ll-update.com uses zero instead of "o" — digit substitution |
+| 15 | url | `https://microsofft-online.com/office365/login` | **PHISH** | microsofft-online.com has a doubled "f" — typosquat |
+| 16 | email | "Your AWS bill for May is ready" from `aws.amazon.com` | **LEGIT** | aws.amazon.com is the legitimate AWS sender domain |
+| 17 | email | "Unusual sign-in blocked on your Microsoft account" from `microsecure-notify.com` | **PHISH** | microsecure-notify.com is not a Microsoft domain — attacker-registered |
+| 18 | email | "Sarah Chen shared a folder with you" from `dropbox.com` | **LEGIT** | Sender is no-reply@dropbox.com — correct domain |
+| 19 | email | "OVERDUE: Invoice #4492 — payment required today" from `invoic3-portal.net` | **PHISH** | invoic3-portal.net uses digit substitution for "e" |
+| 20 | url | `https://app.slack.com/client/T012AB3CD/C024BE91L` | **LEGIT** | Correct app.slack.com domain |
+| 21 | email | "Welcome — complete your onboarding by Friday" from `onboard-portaI.com` | **PHISH** | onboard-portaI.com uses uppercase I instead of lowercase l — homoglyph attack **FLAG:** homoglyph relies on capital I vs lowercase l — confirm the UI font keeps them distinguishable-on-inspection |
+| 22 | email | "A payout of $1,240.00 has been sent to your bank" from `stripe.com` | **LEGIT** | Sender is no-reply@stripe.com — correct domain |
+| 23 | email | "Your authenticator app must be re-enrolled today" from `corp-mfa-reset.net` | **PHISH** | corp-mfa-reset.net is not a legitimate internal domain |
+| 24 | url | `https://zoom.us/j/92345678901` | **LEGIT** | Correct zoom.us domain |
+| 25 | email | "Your package could not be delivered — reschedule now" from `fedex-parcel-notify.com` | **PHISH** | fedex-parcel-notify.com is not fedex.com — attacker-registered lookalike |
+| 26 | email | "Storage policy update for your organisation" from `google.com` | **LEGIT** | Sender is admin-console@google.com — legitimate Google domain **FLAG:** verify `admin-console@google.com` is a plausible real Google sender (lesson still holds: @google.com) |
+| 27 | email | "Subpoena notice — your response required within 48 hours" from `lega1-compliance-notice.org` | **PHISH** | lega1-compliance-notice.org uses digit "1" instead of "l" |
+| 28 | email | "You've been added to a Confluence space" from `atlassian.com` | **LEGIT** | Sender is no-reply@atlassian.com — correct domain |
+| 29 | url | `https://outlook-secure-login.com/owa/auth` | **PHISH** | outlook-secure-login.com is not microsoft.com or outlook.com |
+| 30 | email | "Alex Rivera invited you to a workspace" from `mail.notion.so` | **LEGIT** | mail.notion.so is the legitimate Notion email subdomain |
+| 31 | email | "Important document shared with you — view before it expires" from `gdrive-fileshare.net` | **PHISH** | gdrive-fileshare.net is not google.com or drive.google.com |
+| 32 | email | "[HIGH] CPU utilisation alert — prod-web-01" from `pagerduty.com` | **LEGIT** | Sender is no-reply@pagerduty.com — correct domain |
+| 33 | email | "KYC verification required — account restricted" from `kyc-verify-portal.com` | **PHISH** | kyc-verify-portal.com is not a legitimate financial institution domain |
+| 34 | url | `https://github.com/anthropics/anthropic-sdk-python` | **LEGIT** | Correct github.com domain |
+| 35 | email | "Your password expired 2 days ago — reset required" from `passwd-expired-alert.com` | **PHISH** | passwd-expired-alert.com is an attacker-controlled domain, not corporate IT |
+| 36 | email | "A new device signed in to your account" from `okta.com` | **LEGIT** | Sender is noreply@okta.com — correct domain |
+| 37 | email | "Your application — offer letter enclosed" from `talentacquire-hq.com` | **PHISH** | talentacquire-hq.com is a fictional attacker domain, not a known employer |
+| 38 | email | "Your Twilio account: monthly usage summary" from `twilio.com` | **LEGIT** | Sender is no-reply@twilio.com — correct domain |
+| 39 | email | "Banking details updated for future payments" from `vendor-invoice-update.net` | **PHISH** | vendor-invoice-update.net is a fictional attacker domain |
+| 40 | email | "Scheduled maintenance: Salesforce unavailable Sunday 01:00–03:00 UTC" from `salesforce.com` | **LEGIT** | Sender is noreply@salesforce.com — correct domain |
+| 41 | email | "Your Apple ID has been used to sign in on a new iPhone" from `id-apple-secure.com` | **PHISH** | id-apple-secure.com is not apple.com — attacker-registered lookalike |
+| 42 | email | "Action required: renew your Cloudflare subscription" from `cloudflare.com` | **LEGIT** | Sender is no-reply@cloudflare.com — correct domain |
+| 43 | url | `https://login.salesforce-secure-access.net/id/login` | **PHISH** | salesforce-secure-access.net is not salesforce.com |
+| 44 | email | "Your Zoom meeting recording is available" from `zoom.us` | **LEGIT** | Sender is no-reply@zoom.us — correct domain |
+| 45 | email | "Please e-sign the attached agreement today" from `echosign-portal.net` | **PHISH** | echosign-portal.net is a fictional attacker domain mimicking Adobe Acrobat Sign (formerly EchoSign) |
+| 46 | email | "Security advisory: update your packages" from `npmjs.com` | **LEGIT** | Sender is support@npmjs.com — correct npm domain |
+| 47 | email | "Open enrollment closes Friday — don't lose your benefits" from `hr-benefits-enroll.com` | **PHISH** | hr-benefits-enroll.com is not a recognised HR or benefits platform domain |
+| 48 | url | `https://pypi.org/project/requests/` | **LEGIT** | Correct pypi.org domain |
+| 49 | email | "International wire pending — verify within 2 hours" from `intl-payment-verify.com` | **PHISH** | intl-payment-verify.com is a fictional attacker domain |
+| 50 | email | "Your Terraform Cloud run completed successfully" from `hashicorp.com` | **LEGIT** | Sender is noreply@hashicorp.com — correct domain |
+| 51 | email | "Monitor alert resolved: API latency returned to normal" from `datadoghq.com` | **LEGIT** | Sender is noreply@datadoghq.com — correct domain |
+| 52 | url | `https://secure-office365-verify.com/login/common/oauth2` | **PHISH** | secure-office365-verify.com is not microsoft.com |
+| 53 | email | "Jordan Lee commented on your design" from `figma.com` | **LEGIT** | Sender is noreply@figma.com — correct domain |
+| 54 | email | "Mandatory security awareness training — complete by EOD" from `corp-audit-compliance.net` | **PHISH** | corp-audit-compliance.net is not an internal corporate training domain |
+| 55 | email | "New critical vulnerability in your project" from `snyk.io` | **LEGIT** | Sender is alerts@snyk.io — correct domain |
+| 56 | email | "Unusual spending detected on your cloud account" from `gcloud-billing-alert.com` | **PHISH** | gcloud-billing-alert.com is not google.com or cloud.google.com |
+| 57 | url | `https://aws.amazon.com/console/home` | **LEGIT** | Correct aws.amazon.com domain |
+| 58 | email | "Your signature is required on a legal document" from `docverify-secure.net` | **PHISH** | docverify-secure.net is a fictional attacker domain, not a known e-signature provider |
+| 59 | email | "You were assigned an issue: BUG-2241" from `linear.app` | **LEGIT** | Sender is notifications@linear.app — correct domain |
+| 60 | email | "Recovery code sent — did you request this?" from `account-recovery-google.com` | **PHISH** | account-recovery-google.com is not google.com — attacker-registered |
+| 61 | email | "Deployment successful: production" from `vercel.com` | **LEGIT** | Sender is no-reply@vercel.com — correct domain |
+| 62 | email | "Your expense report was approved" from `expensify.com` | **LEGIT** | Sender is noreply@expensify.com — correct domain |
+| 63 | email | "Identity verification required to continue withdrawals" from `coinbase-verify-id.com` | **PHISH** | coinbase-verify-id.com is not coinbase.com — attacker-registered lookalike |
+| 64 | email | "[PROJ-884] Status changed to In Review" from `atlassian.com` | **LEGIT** | Sender is jira@atlassian.com — correct domain |
+| 65 | url | `https://paypal.com-secure-login.net/signin` | **PHISH** | paypal.com is a subdomain of com-secure-login.net — the real domain is com-secure-login.net |
+| 66 | email | "New order #8821 received in your store" from `shopify.com` | **LEGIT** | Sender is noreply@shopify.com — correct domain |
+| 67 | email | "DDoS attack mitigated on your zone" from `notify.cloudflare.com` | **LEGIT** | notify.cloudflare.com is a legitimate Cloudflare notification subdomain |
+| 68 | email | "Confidential: board resolution document for your review" from `secure-docs-review.net` | **PHISH** | secure-docs-review.net is a fictional attacker domain |
+| 69 | email | "A new device has been added to your account" from `1password.com` | **LEGIT** | Sender is no-reply@1password.com — correct domain |
+| 70 | url | `https://www.dropbox.com/sh/abc123/AAAdefg456` | **LEGIT** | Correct www.dropbox.com domain |
+| 71 | email | "Mandatory Active Directory password reset — all staff" from `active-directory-reset.com` | **PHISH** | active-directory-reset.com is not an internal corporate domain |
+| 72 | email | "Your support ticket #ZD-44821 has been updated" from `zendesk.com` | **LEGIT** | Sender is support@zendesk.com — correct domain |
+| 73 | email | "You clicked a phishing simulation link" from `corp.internal` | **LEGIT** | Sender domain is corp.internal — consistent with internal security team **FLAG:** judgment call: internal phishing-sim debrief marked LEGIT, links to knowbe4.com |
+| 74 | email | "Your DHL parcel is held at customs — pay duty fee" from `dhl-parcel-track.net` | **PHISH** | dhl-parcel-track.net is not dhl.com — fictional attacker domain |
+| 75 | url | `https://trello.com/b/abc123/project-roadmap` | **LEGIT** | Correct trello.com domain |
+| 76 | email | "AWS account suspended — unpaid balance $1,203.44" from `aws-billing-overdue.com` | **PHISH** | aws-billing-overdue.com is not amazon.com or aws.amazon.com |
+| 77 | email | "Pipeline failed: main — build stage" from `mg.gitlab.com` | **LEGIT** | mg.gitlab.com is the legitimate GitLab sending domain via Mailgun |
+| 78 | email | "Update your payroll information before the 15th" from `hrpay-portal-update.com` | **PHISH** | hrpay-portal-update.com is a fictional attacker domain, not a known payroll provider |
+| 79 | email | "Weekly infrastructure digest" from `datadoghq.com` | **LEGIT** | Sender is noreply@datadoghq.com — correct domain |
+| 80 | url | `https://onedrive.live.com/edit.aspx?resid=ABC123!456` | **LEGIT** | Correct onedrive.live.com domain |
 
 One judgment call to audit: item 2's body addresses "pedrodev" — a sample username, fine for a game; change if you want it fully generic. Item 9 now uses the cloudflare.com/learning/ root. The game shell also shows a permanent "all phishing domains are fictional, nothing clickable" footer.
+
+
+**Batch 6 (items 11–80, added 2026-06-12) — NEEDS AUDIT.** 75 generated items, 70 merged. Rejected: #5 (functional dup of existing item 2 — GitHub legit security-notice email (SSH key added vs 2FA enabled, same sender/lesson)); #30 (same registrable domain + verdict as an earlier URL item (google.com:false)); #43 (functional dup of existing item 1 — PayPal "account limited" phish (same brand + lure + verdict)); #55 (same registrable domain + verdict as an earlier URL item (amazon.com:false)); #61 (within-batch dup of #28 — unsolicited recruiting lure delivering a .docm). Same-brand legit pairs kept deliberately — confirm the scenarios stay distinct: Atlassian (Confluence invite vs Jira status), Cloudflare (renewal vs DDoS-mitigated), Datadog (alert-resolved vs weekly digest). Recurring phish families kept for realism: corporate-IT credential resets (VPN cert / MFA re-enroll / password expiry / AD reset), e-signature lures (3), delivery-fee scams (FedEx/DHL), cloud-billing suspensions (GCP/AWS), payroll lures (2), fake-Microsoft logins (3 + existing item 3). Item 64's tells were reconstructed during merge (source paste was truncated mid-array) — review them.
 
 ---
 
@@ -300,3 +373,4 @@ One judgment call to audit: item 2's body addresses "pedrodev" — a sample user
 - [x] Fictional-domain disclaimer added to the Phish or Legit shell
 - [ ] **NEW (2026-06-11):** guess pool `cvepool.ts` (57 entries) — verify CVSS/vector/year/product against NVD, esp. rows flagged in the "Check in particular" column
 - [ ] **NEW (2026-06-12):** Triage puzzles 6–35 — tile-to-category fit + fairness of the benign groups
+- [ ] **NEW (2026-06-12):** Phish items 11–80 — realism + every tell factually correct (esp. flagged rows 12/17/68 by original batch numbering)
