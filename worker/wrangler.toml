@@ -1,0 +1,8 @@
+name = "breachle-events"
+main = "src/index.ts"
+compatibility_date = "2026-06-01"
+
+# Aggregate engagement events. No KV/DB — Analytics Engine only.
+[[analytics_engine_datasets]]
+binding = "EVENTS"
+dataset = "breachle_events"
