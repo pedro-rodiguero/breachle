@@ -1,11 +1,11 @@
 // App-wide config. Rebrand by changing APP_NAME (and SITE_URL on deploy).
 export const APP_NAME = 'Breachle'
 
-// Canonical URL used in share text. TODO: set the real domain at deploy.
+// Canonical URL used in share text.
 export const SITE_URL = 'https://breachle.app'
 
-// Day #1 of every puzzle. Earlier dates clamp to day 1.
-export const EPOCH_UTC = '2026-06-01'
+// Day #1 of every puzzle (launch day). Earlier dates clamp to day 1.
+export const EPOCH_UTC = '2026-06-12'
 
 export const STORAGE_PREFIX = 'breachle'
 
