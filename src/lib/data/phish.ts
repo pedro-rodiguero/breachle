@@ -453,7 +453,7 @@ export const PHISH_ITEMS: PhishItem[] = [
   },
   {
     kind: 'url',
-    displayUrl: 'https://github.com/anthropics/anthropic-sdk-python',
+    displayUrl: 'https://github.com/stripe/stripe-python',
     isPhish: false,
     tells: [
       'Correct github.com domain',

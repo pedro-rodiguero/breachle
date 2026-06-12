@@ -251,7 +251,7 @@ All invented sample data (rendered inert in the UI — no real links). Audit for
 | 31 | email | "Important document shared with you — view before it expires" from `gdrive-fileshare.net` | **PHISH** | gdrive-fileshare.net is not google.com or drive.google.com |
 | 32 | email | "[HIGH] CPU utilisation alert — prod-web-01" from `pagerduty.com` | **LEGIT** | Sender is no-reply@pagerduty.com — correct domain |
 | 33 | email | "KYC verification required — account restricted" from `kyc-verify-portal.com` | **PHISH** | kyc-verify-portal.com is not a legitimate financial institution domain |
-| 34 | url | `https://github.com/anthropics/anthropic-sdk-python` | **LEGIT** | Correct github.com domain |
+| 34 | url | `https://github.com/stripe/stripe-python` | **LEGIT** | Correct github.com domain |
 | 35 | email | "Your password expired 2 days ago — reset required" from `passwd-expired-alert.com` | **PHISH** | passwd-expired-alert.com is an attacker-controlled domain, not corporate IT |
 | 36 | email | "A new device signed in to your account" from `okta.com` | **LEGIT** | Sender is noreply@okta.com — correct domain |
 | 37 | email | "Your application — offer letter enclosed" from `talentacquire-hq.com` | **PHISH** | talentacquire-hq.com is a fictional attacker domain, not a known employer |
