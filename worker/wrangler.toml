@@ -6,3 +6,12 @@ compatibility_date = "2026-06-01"
 [[analytics_engine_datasets]]
 binding = "EVENTS"
 dataset = "breachle_events"
+
+# Light per-IP flood guard on the beacon endpoint.
+[[ratelimits]]
+name = "RATE_LIMIT"
+namespace_id = "1001"
+
+  [ratelimits.simple]
+  limit = 60
+  period = 60
