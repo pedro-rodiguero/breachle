@@ -1,3 +1,4 @@
+import { reportCompletion } from './analytics'
 import { EPOCH_UTC, type GameId } from './config'
 import { isWarmupDay } from './data/warmup'
 import { dayNumber, utcDateKey } from './seed'
@@ -75,6 +76,9 @@ export class DailyGame<P, R> {
 		this.result = result
 		// Archive runs land in the completion log too; stats stay daily-only.
 		logCompletion(this.gameId, this.todayKey, won)
+		// Anonymous engagement beacon — fires once per completion (this method
+		// only runs on the transition to done, never on restore).
+		reportCompletion(this.gameId, won, this.day, this.archive)
 		if (this.archive) return
 		this.stats = completeToday(this.gameId, this.todayKey, result, won)
 	}
