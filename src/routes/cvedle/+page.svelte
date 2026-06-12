@@ -207,7 +207,7 @@
 {/if}
 
 <div class="space-y-4">
-	<GameHeader game={GAME} day={game.day} streak={game.stats.streak} archive={game.archive} {rules} />
+	<GameHeader game={GAME} day={game.day} streak={game.stats.streak} archive={game.archive} {rules} autoRules />
 
 	{#if guesses.length === 0 && !game.done}
 		<div class="glass bracket p-5 text-center">

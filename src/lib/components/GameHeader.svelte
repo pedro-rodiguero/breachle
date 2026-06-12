@@ -1,6 +1,7 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte'
+	import { onMount, type Snippet } from 'svelte'
 	import type { GameMeta } from '$lib/config'
+	import { hasSeenOnce, markSeenOnce } from '$lib/storage'
 	import Modal from './Modal.svelte'
 
 	let {
@@ -8,10 +9,27 @@
 		day,
 		streak,
 		rules,
-		archive = false
-	}: { game: GameMeta; day: number; streak: number; rules: Snippet; archive?: boolean } = $props()
+		archive = false,
+		autoRules = false
+	}: {
+		game: GameMeta
+		day: number
+		streak: number
+		rules: Snippet
+		archive?: boolean
+		// Pop the rules open the very first time this game is played.
+		autoRules?: boolean
+	} = $props()
 
 	let showRules = $state(false)
+
+	// First play of this game (live daily only) surfaces the rules once.
+	onMount(() => {
+		if (autoRules && !archive && !hasSeenOnce(`rules.${game.id}`)) {
+			showRules = true
+			markSeenOnce(`rules.${game.id}`)
+		}
+	})
 </script>
 
 <div class="mb-5 animate-rise">
