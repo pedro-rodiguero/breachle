@@ -1,7 +1,7 @@
 // CVE-dle dataset. Verified against NVD on 2026-06-10.
 // `year` is the disclosure year, which can differ from the CVE id year
 // (PwnKit is CVE-2021-4034 but went public in Jan 2022). cvss/cvssVersion
-// match NVD; sourceUrl is the NVD page. Add entries as needed.
+// match NVD; sourceUrl is the NVD page.
 
 // The attributes a guess is scored on. Pool entries (guess-only, see
 // cvepool.ts) carry just these; daily answers carry the full Cve below.

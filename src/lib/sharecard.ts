@@ -61,7 +61,7 @@ function brackets(ctx: CanvasRenderingContext2D, accent: string) {
 export async function renderShareCard(share: ShareInput): Promise<Blob> {
 	const accent = share.accent ?? '#4dff8f'
 
-	// Make sure the webfonts are in before measuring/drawing text.
+	// Webfonts have to be in before any text is measured or drawn.
 	try {
 		await Promise.all([
 			document.fonts.load(`700 44px ${MONO}`),
