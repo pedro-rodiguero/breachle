@@ -16,7 +16,8 @@
 
 <div class="mb-5 animate-rise">
 	<p class="mb-1.5 font-mono text-[11px] font-bold tracking-[0.25em] text-ink-faint uppercase">
-		<span class="text-brand">&gt;</span> ./{game.id} --day {String(day).padStart(3, '0')}
+		<span class="text-brand">&gt;</span> ./{game.id}
+		{day === 0 ? '--warmup' : `--day ${String(day).padStart(3, '0')}`}
 		{#if archive}<a
 				href="#/archive"
 				title="Back to the archive"

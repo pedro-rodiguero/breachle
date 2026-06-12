@@ -7,6 +7,7 @@
 	import { CVE_POOL } from '$lib/data/cvepool'
 	import { CVES, type Cve, type CveCore } from '$lib/data/cves'
 	import { afterNavigate } from '$app/navigation'
+	import { WARMUP_CVES } from '$lib/data/warmup'
 	import { archiveDateFromHash, DailyGame } from '$lib/daily.svelte'
 	import { dailyPick } from '$lib/seed'
 	import { tick } from 'svelte'
@@ -20,12 +21,14 @@
 	type Result = { won: boolean; guesses: string[] }
 
 	const game = new DailyGame<Progress, Result>('cvedle', archiveDateFromHash())
-	const answer = dailyPick('cvedle', CVES, game.todayKey)
+	const answer = WARMUP_CVES[game.todayKey] ?? dailyPick('cvedle', CVES, game.todayKey)
 
 	// Answers come from the curated set; guesses can be anything in the pool.
+	// Warm-up answers join the pool so they stay typeable (and guessable later).
 	const GUESSABLE: CveCore[] = [
 		...CVES,
-		...CVE_POOL.filter((p) => !CVES.some((c) => c.id === p.id))
+		...CVE_POOL.filter((p) => !CVES.some((c) => c.id === p.id)),
+		...Object.values(WARMUP_CVES)
 	]
 
 	// Yesterday's drop, shown in the intel strip (skipped on day one).
@@ -33,7 +36,7 @@
 		const d = new Date(game.todayKey + 'T00:00:00Z')
 		d.setUTCDate(d.getUTCDate() - 1)
 		const key = d.toISOString().slice(0, 10)
-		return key >= EPOCH_UTC ? dailyPick('cvedle', CVES, key) : undefined
+		return WARMUP_CVES[key] ?? (key >= EPOCH_UTC ? dailyPick('cvedle', CVES, key) : undefined)
 	})()
 
 	// Blank out the answer name(s) where they appear in the description.

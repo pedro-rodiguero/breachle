@@ -4,6 +4,7 @@
 	import ResultPanel from '$lib/components/ResultPanel.svelte'
 	import { GAME_BY_ID } from '$lib/config'
 	import { PHISH_ITEMS, type PhishItem } from '$lib/data/phish'
+	import { WARMUP_PHISH } from '$lib/data/warmup'
 	import { archiveDateFromHash, DailyGame } from '$lib/daily.svelte'
 	import { dailySample } from '$lib/seed'
 	import { fly } from 'svelte/transition'
@@ -16,7 +17,8 @@
 	type Result = { answers: boolean[] }
 
 	const game = new DailyGame<Progress, Result>('phish', archiveDateFromHash())
-	const items = dailySample('phish', PHISH_ITEMS, ROUND_SIZE, game.todayKey)
+	const items =
+		WARMUP_PHISH[game.todayKey] ?? dailySample('phish', PHISH_ITEMS, ROUND_SIZE, game.todayKey)
 
 	let answers = $state<boolean[]>(game.result?.answers ?? game.savedProgress?.answers ?? [])
 	// Index currently shown in its revealed (verdict) state, if any.

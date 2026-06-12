@@ -1,4 +1,5 @@
 import { EPOCH_UTC, type GameId } from './config'
+import { isWarmupDay } from './data/warmup'
 import { dayNumber, utcDateKey } from './seed'
 import { completeToday, loadToday, logCompletion, saveProgress, type GameStats } from './storage'
 
@@ -16,14 +17,15 @@ export function archiveDateFromHash(): string | null {
 	return query ? new URLSearchParams(query).get('d') : null
 }
 
-// Valid archive key: a real date from the epoch up to yesterday.
+// Valid archive key: a real date from the epoch up to yesterday, or one of
+// the pre-launch warm-up days.
 function resolveDateKey(requested: string | null | undefined): { key: string; archive: boolean } {
 	const today = utcDateKey()
 	if (
 		requested &&
 		/^\d{4}-\d{2}-\d{2}$/.test(requested) &&
 		!Number.isNaN(Date.parse(requested)) &&
-		requested >= EPOCH_UTC &&
+		(requested >= EPOCH_UTC || isWarmupDay(requested)) &&
 		requested < today
 	) {
 		return { key: requested, archive: true }
@@ -47,7 +49,8 @@ export class DailyGame<P, R> {
 		const { key, archive } = resolveDateKey(requestedDate)
 		this.todayKey = key
 		this.archive = archive
-		this.day = dayNumber(key)
+		// Warm-up days sit before day 1; 0 renders as the warm-up badge.
+		this.day = isWarmupDay(key) ? 0 : dayNumber(key)
 
 		if (archive) {
 			this.savedProgress = undefined

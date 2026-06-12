@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { EPOCH_UTC, GAMES } from '$lib/config'
+	import { WARMUP_DAYS } from '$lib/data/warmup'
 	import { dayNumber, utcDateKey } from '$lib/seed'
 	import { getCompletionLog, type Outcome } from '$lib/storage'
 
@@ -7,12 +8,7 @@
 	const todayNum = dayNumber(todayKey)
 	const log = getCompletionLog()
 
-	// All puzzle days, newest first. Day 1 = EPOCH_UTC.
-	const days = Array.from({ length: todayNum }, (_, i) => {
-		const n = todayNum - i
-		const key = new Date(Date.parse(EPOCH_UTC) + (n - 1) * 86_400_000)
-			.toISOString()
-			.slice(0, 10)
+	const row = (n: number, key: string) => {
 		const outcomes = GAMES.map((g) => log[g.id]?.[key] as Outcome | undefined)
 		return {
 			n,
@@ -21,7 +17,17 @@
 			outcomes,
 			cleared: outcomes.every(Boolean)
 		}
-	})
+	}
+
+	// All puzzle days, newest first. Day 1 = EPOCH_UTC; the warm-up days
+	// (n = 0) sit before launch and bring their own puzzles.
+	const days = [
+		...Array.from({ length: todayNum }, (_, i) => {
+			const n = todayNum - i
+			return row(n, new Date(Date.parse(EPOCH_UTC) + (n - 1) * 86_400_000).toISOString().slice(0, 10))
+		}),
+		...[...WARMUP_DAYS].reverse().map((key) => row(0, key))
+	]
 	const clearedCount = days.filter((d) => d.cleared).length
 </script>
 
@@ -58,7 +64,15 @@
 			>
 				<div class="min-w-0 flex-1">
 					<p class="font-mono text-sm font-bold">
-						#{String(n).padStart(3, '0')}
+						{#if n === 0}
+							<span class="rounded-tile border border-amber/60 bg-amber/10 px-1.5 py-0.5 font-mono text-[10px] font-bold tracking-wider text-amber uppercase"
+								title="Pre-launch warm-up drop"
+							>
+								warm-up
+							</span>
+						{:else}
+							#{String(n).padStart(3, '0')}
+						{/if}
 						{#if isToday}
 							<span class="ml-1 rounded-tile border border-brand/60 bg-brand/10 px-1.5 py-0.5 font-mono text-[10px] font-bold tracking-wider text-brand uppercase">
 								today
@@ -79,7 +93,7 @@
 						{@const outcome = outcomes[gi]}
 						<a
 							href="#{game.path}{isToday ? '' : `?d=${key}`}"
-							aria-label="{game.name}, day {n}{outcome ? ` — ${outcome}` : ''}"
+							aria-label="{game.name}, {n === 0 ? `warm-up ${key}` : `day ${n}`}{outcome ? ` — ${outcome}` : ''}"
 							title="{game.name}{outcome ? ` · ${outcome === 'won' ? 'solved' : 'attempted'}` : ''}"
 							class="relative grid size-9 place-items-center rounded-tile border bg-raised text-lg transition hover:scale-110
 								{outcome === 'won'
