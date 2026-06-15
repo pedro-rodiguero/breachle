@@ -9,6 +9,7 @@
 // For CI / a headless box, pass a token scoped to "Account Analytics: Read":
 //   CLOUDFLARE_API_TOKEN=xxx npm run insights
 
+import { execSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
@@ -20,12 +21,29 @@ const DATASET = 'breachle_events'
 // is nothing to set up after `wrangler login`.
 function wranglerToken() {
   const base = process.env.XDG_CONFIG_HOME || join(homedir(), '.config')
-  try {
-    const toml = readFileSync(join(base, '.wrangler', 'config', 'default.toml'), 'utf8')
-    return toml.match(/^oauth_token\s*=\s*"([^"]+)"/m)?.[1]
-  } catch {
-    return undefined
+  const path = join(base, '.wrangler', 'config', 'default.toml')
+  const read = () => {
+    try {
+      return readFileSync(path, 'utf8')
+    } catch {
+      return ''
+    }
   }
+  let toml = read()
+  if (!toml) return undefined
+  // OAuth access tokens are short-lived. If the stored one is expired (or about
+  // to be), let wrangler refresh it the way it would on any normal command.
+  const expiry = toml.match(/^expiration_time\s*=\s*"([^"]+)"/m)?.[1]
+  if (!expiry || Date.parse(expiry) - Date.now() < 60_000) {
+    try {
+      execSync('npx wrangler whoami', { stdio: 'ignore' })
+      toml = read()
+    } catch {
+      // Refresh failed (e.g. login fully expired); fall through and let the
+      // query surface a clear auth error below.
+    }
+  }
+  return toml.match(/^oauth_token\s*=\s*"([^"]+)"/m)?.[1]
 }
 
 const TOKEN = process.env.CLOUDFLARE_API_TOKEN || wranglerToken()
@@ -122,6 +140,10 @@ try {
   console.log('')
 } catch (err) {
   console.error('Query failed:', err.message)
-  console.error('If the dataset is empty, no events have been recorded yet.')
+  if (/HTTP 401|Authentication/.test(err.message)) {
+    console.error('Auth expired — run `wrangler login`, or set CLOUDFLARE_API_TOKEN.')
+  } else {
+    console.error('If the dataset is empty, no events have been recorded yet.')
+  }
   process.exit(1)
 }
